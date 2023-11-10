@@ -38,6 +38,14 @@ class HTTPRequest {
 	public var httpVersion:String;
 
 	/**
+	 * 获得本地文件路径
+	 * @return String
+	 */
+	public function getLocalFilePath():String {
+		return Path.join([server.webDir, path]);
+	}
+
+	/**
 	 * 网络请求
 	 * @param socket 网络socket
 	 * @param server 服务

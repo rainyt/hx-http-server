@@ -51,7 +51,12 @@ class HTTPServer {
 		while (__runing) {
 			var socket = __server.accept();
 			if (socket != null) {
-				onConnectClient(socket);
+				try {
+					onConnectClient(socket);
+				} catch (e:Exception) {
+					if (this.log)
+						Log.error(e.message);
+				}
 			}
 		}
 	}

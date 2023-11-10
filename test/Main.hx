@@ -1,6 +1,7 @@
 package;
 
 import sys.FileSystem;
+import haxe.io.Path;
 import http.HTTPServer;
 
 class Main {
@@ -13,10 +14,11 @@ class Main {
 		http.onConnectRequest = (http) -> {
 			trace("请求路径：", http.path);
 			trace("请求方法：", http.method);
-			if (StringTools.endsWith(http.path, ".hl")) {
+			var path = http.getLocalFilePath();
+			if (FileSystem.exists(path)) {
 				http.sendFile(http.path);
 			} else
-				http.send("hello world!");
+				http.send("hello world! File is not found: " + http.path);
 		}
 		http.start();
 	}
