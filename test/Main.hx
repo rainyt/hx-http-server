@@ -1,5 +1,6 @@
 package;
 
+import sys.FileSystem;
 import http.HTTPServer;
 
 class Main {
@@ -12,7 +13,10 @@ class Main {
 		http.onConnectRequest = (http) -> {
 			trace("请求路径：", http.path);
 			trace("请求方法：", http.method);
-			http.send("hello world!", OK);
+			if (StringTools.endsWith(http.path, ".hl")) {
+				http.sendFile(http.path);
+			} else
+				http.send("hello world!");
 		}
 		http.start();
 	}

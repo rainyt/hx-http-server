@@ -1,5 +1,8 @@
 package http;
 
+import haxe.io.Path;
+import sys.FileSystem;
+import sys.io.File;
 import utils.Log;
 import sys.net.Socket;
 
@@ -58,9 +61,31 @@ class HTTPRequest {
 	 * @param text 
 	 * @param code 
 	 */
-	public function send(text:String, code:HTTPRequestCode):Void {
+	public function send(text:String, code:HTTPRequestCode = OK):Void {
 		var response:HTTPResponse = new HTTPResponse(code, mime, text);
 		var bytes = response.getData();
 		this.client.output.writeBytes(bytes, 0, bytes.length);
+	}
+
+	/**
+	 * 发生文件内容
+	 * @param filePath 
+	 * @param code 
+	 */
+	public function sendFile(filePath:String, code:HTTPRequestCode = OK):Void {
+		var path = Path.join([server.webDir, filePath]);
+		if (FileSystem.exists(path)) {
+			if (server.log)
+				Log.info("sendFile", path);
+			var response:HTTPResponse = new HTTPResponse(code, mime, File.getBytes(path));
+			var bytes = response.getData();
+			this.client.output.writeBytes(bytes, 0, bytes.length);
+		} else {
+			if (server.log)
+				Log.info("not found", path);
+			var response:HTTPResponse = new HTTPResponse(NOT_FOUND, mime, "Not found " + filePath);
+			var bytes = response.getData();
+			this.client.output.writeBytes(bytes, 0, bytes.length);
+		}
 	}
 }

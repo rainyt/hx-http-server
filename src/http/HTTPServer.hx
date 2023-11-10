@@ -1,5 +1,7 @@
 package http;
 
+import utils.Log;
+import haxe.Exception;
 import sys.thread.Thread;
 import sys.net.Host;
 import sys.net.Socket;
@@ -17,6 +19,8 @@ class HTTPServer {
 	private var __port:Int = 0;
 
 	public var log:Bool = false;
+
+	public var webDir:String = "./";
 
 	/**
 	 * 构造一个HTTP服务器
@@ -36,8 +40,14 @@ class HTTPServer {
 	public function start():Void {
 		__server = new Socket();
 		var host = new Host(__ip);
-		__server.bind(host, __port);
-		__server.listen(1024);
+		try {
+			__server.bind(host, __port);
+			__server.listen(1024);
+		} catch (e:Exception) {
+			throw e;
+		}
+		Log.info("excPath", Sys.getCwd());
+		Log.info("listener", __ip + ":" + __port);
 		while (__runing) {
 			var socket = __server.accept();
 			if (socket != null) {

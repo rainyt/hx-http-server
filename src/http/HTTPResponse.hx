@@ -30,9 +30,8 @@ class HTTPResponse {
 		bytesOutput.writeString("Access-Control-Allow-Origin: *"); // js fetch is stupid
 		bytesOutput.writeString("\r\n");
 		bytesOutput.writeString("\r\n");
-		bytesOutput.writeString(__data.toString());
+		bytesOutput.writeBytes(__data, 0, __data.length);
 		bytesOutput.writeString("\r\n");
-		// trace(bytes.toString());
 		return bytesOutput.getBytes();
 	}
 }
