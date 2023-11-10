@@ -1,0 +1,14 @@
+{
+  "name": "http-server",
+  "url": "https://github.com/rainyt/http-server",
+  "license": "MIT",
+  "tags": ["hxcpp","http","server"],
+  "description": "Http Server HxCpp target",
+  "version": "0.0.1",
+  "releasenote": "",
+  "contributors": ["rainy"],
+  "classPath": "src",
+  "dependencies": {
+
+  }
+}
