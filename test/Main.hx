@@ -1,9 +1,7 @@
 package;
 
-import http.route.HTTPReflectRoute;
 import utils.Log;
 import sys.FileSystem;
-import haxe.io.Path;
 import http.HTTPServer;
 
 class Main {
