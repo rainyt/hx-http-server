@@ -87,10 +87,11 @@ class HTTPReflectRoute extends HTTPRoute {
 					var argValue:Dynamic = switch (a.type) {
 						case INT:
 							Std.parseInt(v);
+						case FLOAT:
+							Std.parseFloat(v);
 						default:
 							v;
 					}
-					trace("a.type", a.type, a.name, argValue);
 					args.push(argValue);
 				}
 				reflectObject.callMethod(fun.fun, args);
