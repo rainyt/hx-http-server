@@ -41,6 +41,11 @@ class HTTPRequest {
 	public var httpVersion:String;
 
 	/**
+	 * 参数数据
+	 */
+	public var param:HTTPParam;
+
+	/**
 	 * 获得本地文件路径
 	 * @return String
 	 */
@@ -65,6 +70,7 @@ class HTTPRequest {
 			path = headerMessage[1];
 			httpVersion = headerMessage[2];
 		}
+		this.param = new HTTPParam(this);
 	}
 
 	/**
