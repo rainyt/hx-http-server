@@ -68,16 +68,10 @@ class HTTPReflectRoute extends HTTPRoute {
 	override function onConnectClient(client:HTTPRequest):Bool {
 		// 请求处理
 		var args = client.path.split("/");
+		args.shift();
 		if (args.length > 0) {
-			var fun = {
-				var v = null;
-				for (s in args) {
-					if (__methods.exists(s)) {
-						v = s;
-					}
-				}
-				v;
-			}
+			args.remove(routeId.substr(1));
+			var fun = args[0];
 			if (client.server.log) {
 				Log.info("reflect call:", fun);
 			}
