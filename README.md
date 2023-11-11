@@ -25,6 +25,7 @@
 > 可参考`test/CustomRoute.hx`类的实现。
 - [x] 对象反射路由
 > 通过一个对象，由`http.macro.ReflectRouteMacro`自动生成反射对象类，使它每个公开的方法都能够自动转换成路由方法，并遵循参数的可选不可选、参数名等。
+> 同时，可以直接继承`http.route.HTTPReflectCustomObject`直接实现公开方法，请参考`ReflectCustomObject`。
 - [ ] HTTPS
 > 它需要一个证书测试，我还没有进行这项测试。
 - [x] GET数据
