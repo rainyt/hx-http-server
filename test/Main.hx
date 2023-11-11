@@ -35,7 +35,6 @@ class Main {
 		// 自定义路由功能
 		http.route.addRouteObject(new CustomRoute("/api"));
 		// 自定义反射对象路由
-		var obj = new ReflectCustomObject();
-		http.route.addRouteObject(new HTTPReflectRoute("/reflect", obj));
+		http.route.addReflectRoute("/reflect", new ReflectCustomObject());
 	}
 }

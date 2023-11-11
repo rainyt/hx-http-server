@@ -1,5 +1,7 @@
 package http;
 
+import http.route.HTTPReflectRoute;
+import http.route.HTTPReflectCustomObject;
 import http.route.HTTPRoute;
 import http.route.IRoute;
 
@@ -27,6 +29,15 @@ class HTTPRouteManager {
 		var newRoute = new HTTPRoute(route);
 		newRoute.onConnectClientCallBack = cb;
 		addRouteObject(newRoute);
+	}
+
+	/**
+	 * 添加反射对象路由
+	 * @param route 
+	 * @param object 
+	 */
+	public function addReflectRoute(route:String, object:HTTPReflectCustomObject):Void {
+		this.addRouteObject(new HTTPReflectRoute("/reflect", object));
 	}
 
 	/**
