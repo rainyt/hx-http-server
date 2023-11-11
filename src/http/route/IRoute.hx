@@ -1,10 +1,20 @@
-package http.base;
+package http.route;
 
 interface IRoute {
 	/**
 	 * 当前的路由ID
 	 */
 	public var routeId:String;
+
+	/**
+	 * 服务
+	 */
+	public var server:HTTPServer;
+
+	/**
+	 * 初始化处理，这个时候已经存在server了
+	 */
+	public function onInit():Void;
 
 	/**
 	 * 路由请求进入时

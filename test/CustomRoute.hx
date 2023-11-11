@@ -1,6 +1,6 @@
 import sys.io.File;
 import http.HTTPRequest;
-import http.HTTPRoute;
+import http.route.HTTPRoute;
 
 /**
  * 自定义路由

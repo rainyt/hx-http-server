@@ -1,7 +1,7 @@
 package http;
 
-import http.HTTPRoute;
-import http.base.IRoute;
+import http.route.HTTPRoute;
+import http.route.IRoute;
 
 /**
  * 路由管理器
@@ -12,7 +12,11 @@ class HTTPRouteManager {
 	 */
 	public var routes:Map<String, IRoute> = [];
 
-	public function new() {}
+	public var server:HTTPServer;
+
+	public function new(server:HTTPServer) {
+		this.server = server;
+	}
 
 	/**
 	 * 添加路由
@@ -30,7 +34,12 @@ class HTTPRouteManager {
 	 * @param route 
 	 */
 	public function addRouteObject(route:IRoute):Void {
+		if (routes.exists(route.routeId)) {
+			routes.get(route.routeId).server = null;
+		}
+		route.server = this.server;
 		routes.set(route.routeId, route);
+		route.onInit();
 	}
 
 	/**

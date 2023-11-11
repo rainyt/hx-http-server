@@ -1,5 +1,6 @@
 package;
 
+import http.route.HTTPReflectRoute;
 import utils.Log;
 import sys.FileSystem;
 import haxe.io.Path;
@@ -31,5 +32,8 @@ class Main {
 		});
 		// 自定义路由功能
 		http.route.addRouteObject(new CustomRoute("/api"));
+		// 自定义反射对象路由
+		var obj = new ReflectCustomObject();
+		http.route.addRouteObject(new HTTPReflectRoute("/reflect", obj));
 	}
 }

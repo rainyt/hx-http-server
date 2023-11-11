@@ -1,6 +1,6 @@
-package http;
+package http.route;
 
-import http.base.IRoute;
+import http.route.IRoute;
 
 /**
  * 请求路由功能
@@ -10,6 +10,16 @@ class HTTPRoute implements IRoute {
 	 * 当前的路由ID
 	 */
 	public var routeId:String;
+
+	/**
+	 * 服务
+	 */
+	public var server:HTTPServer;
+
+	/**
+	 * 初始化处理，这个时候已经存在server了
+	 */
+	public function onInit():Void {}
 
 	/**
 	 * 构造一个路由

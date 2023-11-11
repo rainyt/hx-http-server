@@ -1,6 +1,5 @@
 package http;
 
-import http.base.IRoute;
 import haxe.EntryPoint;
 import utils.Log;
 import haxe.Exception;
@@ -27,7 +26,7 @@ class HTTPServer {
 	/**
 	 * 路由管理器
 	 */
-	public var route:HTTPRouteManager = new HTTPRouteManager();
+	public var route:HTTPRouteManager;
 
 	/**
 	 * 构造一个HTTP服务器
@@ -39,6 +38,7 @@ class HTTPServer {
 		__ip = ip;
 		__port = port;
 		this.log = log;
+		this.route = new HTTPRouteManager(this);
 	}
 
 	/**
