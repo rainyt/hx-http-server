@@ -13,6 +13,12 @@ class HTTPResponse {
 
 	private var __mime:String;
 
+	/**
+	 * 构造信息包装一般需要提供二进制数据或者是文本数据
+	 * @param code 
+	 * @param mime 
+	 * @param data 
+	 */
 	public function new(code:HTTPRequestCode, mime:String, data:Dynamic) {
 		this.__code = code;
 		this.__mime = mime;
@@ -22,6 +28,10 @@ class HTTPResponse {
 			this.__data = data;
 	}
 
+	/**
+	 * 获得二进制数据
+	 * @return Bytes
+	 */
 	public function getData():Bytes {
 		var bytesOutput:BytesOutput = new BytesOutput();
 		bytesOutput.writeString("HTTP/1.1 " + __code + " " + HTTPRequestCode.toMessageString(__code));

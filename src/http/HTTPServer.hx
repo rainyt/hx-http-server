@@ -1,5 +1,6 @@
 package http;
 
+import http.base.IRoute;
 import haxe.EntryPoint;
 import utils.Log;
 import haxe.Exception;
@@ -22,6 +23,11 @@ class HTTPServer {
 	public var log:Bool = false;
 
 	public var webDir:String = "./";
+
+	/**
+	 * 路由管理器
+	 */
+	public var route:HTTPRouteManager = new HTTPRouteManager();
 
 	/**
 	 * 构造一个HTTP服务器
@@ -81,6 +87,7 @@ class HTTPServer {
 		if (head.indexOf("GET") == 0 || head.indexOf("POST") == 0) {
 			Thread.create(() -> {
 				var http = new HTTPRequest(client, this, head);
+				route.callRoute(http.path, http);
 				onConnectRequest(http);
 			});
 		} else {

@@ -14,13 +14,21 @@ class Main {
 		var http = new HTTPServer(ip, port, true);
 		http.start();
 		http.onConnectRequest = (http) -> {
-			Log.info("请求路径：", http.path);
-			Log.info("请求方法：", http.method);
 			var path = http.getLocalFilePath();
 			if (FileSystem.exists(path)) {
 				http.sendFile(http.path);
 			} else
 				http.send("hello world! File is not found: " + http.path);
 		}
+		// 路由功能测试
+		http.route.addRoute("/", (http) -> {
+			trace("访问到了/路由", http.path);
+			return true;
+		});
+
+		http.route.addRoute("/index.html", (http) -> {
+			trace("访问到了/index.html路由", http.path);
+			return true;
+		});
 	}
 }
