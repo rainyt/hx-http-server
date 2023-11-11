@@ -42,7 +42,7 @@ class HTTPReflectRoute extends HTTPRoute {
 	 * @param routeId 路由
 	 * @param reflectObject 路由反射对象
 	 */
-	public function new(routeId:String, reflectObject:Dynamic) {
+	public function new(routeId:String, reflectObject:HTTPReflectCustomObject) {
 		super(routeId);
 		this.reflectObject = reflectObject;
 	}
