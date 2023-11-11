@@ -29,3 +29,4 @@
 - [x] GET数据
 > 通过`client.param.get`方法获得`?`后面的参数。
 - [x] POST数据
+> 已支持`application/json`以及`application/x-www-form-urlencoded`支持。
