@@ -1,5 +1,5 @@
 # HTTP Server
-通过Haxe编写的HTTP服务器，开发中
+通过Haxe编写的HTTP服务器，基本功能已经准备好，正进入生产阶段。
 
 ## 支持
 - [x] 基础的HTTP服务功能
