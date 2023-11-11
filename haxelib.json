@@ -1,5 +1,5 @@
 {
-  "name": "http-server",
+  "name": "hx-http-server",
   "url": "https://github.com/rainyt/http-server",
   "license": "MIT",
   "tags": ["hxcpp","http","server"],

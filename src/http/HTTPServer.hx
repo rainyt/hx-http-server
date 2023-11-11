@@ -74,8 +74,6 @@ class HTTPServer {
 			var socket = __server.accept();
 			if (socket != null) {
 				try {
-					if (this.log)
-						Log.info("connecting");
 					onConnectClient(socket);
 				} catch (e:Exception) {
 					if (this.log)

@@ -122,8 +122,10 @@ class HTTPRequest {
 					contentType = datas[1];
 			}
 		}
-		postData = Bytes.alloc(contentLength);
-		input.readBytes(postData, 0, contentLength);
+		if (contentLength > 0) {
+			postData = Bytes.alloc(contentLength);
+			input.readBytes(postData, 0, contentLength);
+		}
 	}
 
 	/**
