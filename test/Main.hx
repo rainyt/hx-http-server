@@ -12,6 +12,7 @@ class Main {
 		var ip:String = "0.0.0.0";
 		var port = 5555;
 		var http = new HTTPServer(ip, port, true);
+		http.start();
 		http.onConnectRequest = (http) -> {
 			Log.info("请求路径：", http.path);
 			Log.info("请求方法：", http.method);
@@ -21,6 +22,5 @@ class Main {
 			} else
 				http.send("hello world! File is not found: " + http.path);
 		}
-		http.start();
 	}
 }

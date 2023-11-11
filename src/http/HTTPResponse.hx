@@ -3,6 +3,9 @@ package http;
 import haxe.io.BytesOutput;
 import haxe.io.Bytes;
 
+/**
+ * 信息包装
+ */
 class HTTPResponse {
 	private var __code:HTTPRequestCode;
 

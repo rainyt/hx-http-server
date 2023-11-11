@@ -6,6 +6,9 @@ import sys.io.File;
 import utils.Log;
 import sys.net.Socket;
 
+/**
+ * 网络请求
+ */
 class HTTPRequest {
 	/**
 	 * 当前服务

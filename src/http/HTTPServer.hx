@@ -1,5 +1,6 @@
 package http;
 
+import haxe.EntryPoint;
 import utils.Log;
 import haxe.Exception;
 import sys.thread.Thread;
@@ -48,6 +49,10 @@ class HTTPServer {
 		}
 		Log.info("excPath", Sys.getCwd());
 		Log.info("listener", __ip + ":" + __port);
+		EntryPoint.addThread(onServerRuning);
+	}
+
+	public function onServerRuning():Void {
 		while (__runing) {
 			var socket = __server.accept();
 			if (socket != null) {
