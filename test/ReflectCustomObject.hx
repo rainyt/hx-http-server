@@ -1,11 +1,9 @@
+import http.route.HTTPReflectCustomObject;
+
 /**
  * 自定义反射路由服务，每个方法会因为`ReflectRouteMacro`宏，获得一个`http`的对象，通过它进行发送消息。
  */
-@:keep
-@:build(http.macro.ReflectRouteMacro.build())
-class ReflectCustomObject {
-	public function new() {}
-
+class ReflectCustomObject extends HTTPReflectCustomObject {
 	/**
 	 * 一个方法调用
 	 * @param value1 
