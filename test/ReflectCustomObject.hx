@@ -27,4 +27,14 @@ class ReflectCustomObject {
 		trace("访问到call2接口，并且接受到了数据：", value1, value2);
 		http.send('int1/float=${value1 / value2}\npaths[1]=${http.param.at(1)}');
 	}
+
+	/**
+	 * POST数据获得
+	 * @param value 
+	 * @param value2 
+	 */
+	@:post
+	public function postData(value:Int, value2:Int):Void {
+		trace("将获得post数据：", value, value2);
+	}
 }

@@ -14,7 +14,7 @@ class JsonData implements IParser {
 		var json = Json.parse(jsonData);
 		var keys = Reflect.fields(json);
 		for (key in keys) {
-			data.set(key, Reflect.getProperty(json, key));
+			data.set(key, Std.string(Reflect.getProperty(json, key)));
 		}
 	}
 }

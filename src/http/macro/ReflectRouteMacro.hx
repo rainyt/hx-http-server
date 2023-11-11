@@ -43,7 +43,6 @@ class ReflectRouteMacro {
 							name: "http",
 							type: macro :http.HTTPRequest
 						});
-						trace("fun:", item.name);
 					default:
 				}
 			}

@@ -118,9 +118,11 @@ class HTTPRequest {
 					host = datas[1];
 				case "Content-Length:":
 					contentLength = Std.parseInt(datas[1]);
+				case "Content-Type:":
+					contentType = datas[1];
 			}
 		}
-		var postData = Bytes.alloc(contentLength);
+		postData = Bytes.alloc(contentLength);
 		input.readBytes(postData, 0, contentLength);
 	}
 

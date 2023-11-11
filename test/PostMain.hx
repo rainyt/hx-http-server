@@ -1,3 +1,4 @@
+import haxe.Json;
 import haxe.io.Bytes;
 import haxe.Http;
 
@@ -13,8 +14,12 @@ class PostMain {
 		}
 		http.request(true);
 
-		var http:Http = new Http("http://127.0.0.1:5555");
-		http.setPostBytes(Bytes.ofString("TESTEST"));
+		var http:Http = new Http("http://127.0.0.1:5555/reflect/postData");
+		http.setHeader("Content-Type", "application/json");
+		http.setPostBytes(Bytes.ofString(Json.stringify({
+			value: 1,
+			value2: 2
+		})));
 		http.onData = (data) -> {
 			trace("数据：", data);
 		}
