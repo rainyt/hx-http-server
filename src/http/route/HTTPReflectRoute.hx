@@ -59,7 +59,7 @@ class HTTPReflectRoute extends HTTPRoute {
 				__methods.set(key, {
 					fun: fun,
 					args: value,
-					method: GET
+					method: [GET]
 				});
 			}
 		}
@@ -115,7 +115,7 @@ class HTTPReflectRoute extends HTTPRoute {
  */
 typedef HTTPReflectRouteFunction = {
 	fun:Dynamic,
-	method:HTTPRequestMethod,
+	method:Array<HTTPRequestMethod>,
 	args:Array<HTTPReflectFunctionParam>
 }
 
