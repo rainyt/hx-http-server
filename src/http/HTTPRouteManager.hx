@@ -37,7 +37,7 @@ class HTTPRouteManager {
 	 * @param object 
 	 */
 	public function addReflectRoute(route:String, object:HTTPReflectCustomObject):Void {
-		this.addRouteObject(new HTTPReflectRoute("/reflect", object));
+		this.addRouteObject(new HTTPReflectRoute(route, object));
 	}
 
 	/**

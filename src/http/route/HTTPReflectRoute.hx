@@ -75,7 +75,7 @@ class HTTPReflectRoute extends HTTPRoute {
 			args.remove(routeId.substr(1));
 			var fun = args[0];
 			if (client.server.log) {
-				Log.info("reflect call:", fun);
+				Log.info("route reflect call:", fun);
 			}
 			if (__methods.exists(fun)) {
 				// TODO GET POST处理
