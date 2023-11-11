@@ -26,12 +26,12 @@ class ReflectRouteMacro {
 				switch item.kind {
 					case FFun(f):
 						var methods:Array<HTTPRequestMethod> = [];
-						var array = item.meta.map((f) -> f.name == ":post");
+						var array = item.meta.filter((f) -> f.name == ":post");
 						if (array.length > 0) {
 							// POST请求
 							methods.push(POST);
 						}
-						var array = item.meta.map((f) -> f.name == ":get");
+						var array = item.meta.filter((f) -> f.name == ":get");
 						if (array.length > 0) {
 							// GET请求
 							methods.push(GET);
