@@ -69,7 +69,15 @@ class HTTPReflectRoute extends HTTPRoute {
 		// 请求处理
 		var args = client.path.split("/");
 		if (args.length > 0) {
-			var fun = args[args.length - 1];
+			var fun = {
+				var v = null;
+				for (s in args) {
+					if (__methods.exists(s)) {
+						v = s;
+					}
+				}
+				v;
+			}
 			if (client.server.log) {
 				Log.info("reflect call:", fun);
 			}
@@ -98,7 +106,7 @@ class HTTPReflectRoute extends HTTPRoute {
 				return true;
 			} else {
 				if (client.server.log)
-					Log.error("reflect call fail:", fun);
+					Log.error("reflect call fail:", fun, " by path " + client.path);
 			}
 		} else {
 			// 方法不存在
