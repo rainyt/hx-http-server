@@ -28,4 +28,4 @@
 - [ ] HTTPS
 - [x] GET数据
 > 通过`client.param.get`方法获得`?`后面的参数。
-- [ ] POST数据
+- [x] POST数据

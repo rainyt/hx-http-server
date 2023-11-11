@@ -36,5 +36,6 @@ class ReflectCustomObject {
 	@:post
 	public function postData(value:Int, value2:Int):Void {
 		trace("将获得post数据：", value, value2);
+		http.send("接受到POST数据：value=" + value + "&value2=" + value2);
 	}
 }

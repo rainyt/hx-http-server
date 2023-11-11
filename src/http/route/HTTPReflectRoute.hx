@@ -50,6 +50,7 @@ class HTTPReflectRoute extends HTTPRoute {
 	override function onInit() {
 		super.onInit();
 		var reflectMaps:Map<String, Array<HTTPReflectFunctionParam>> = reflectObject.getProperty("reflectMaps");
+		var reflectMethodMaps:Map<String, Array<HTTPRequestMethod>> = reflectObject.getProperty("reflectMethodMaps");
 		for (key => value in reflectMaps) {
 			var fun:Dynamic = reflectObject.getProperty(key);
 			if (fun.isFunction()) {
@@ -59,8 +60,9 @@ class HTTPReflectRoute extends HTTPRoute {
 				__methods.set(key, {
 					fun: fun,
 					args: value,
-					method: [GET]
+					method: reflectMethodMaps.get(key)
 				});
+				trace(key, reflectMethodMaps.get(key));
 			}
 		}
 	}
@@ -79,13 +81,26 @@ class HTTPReflectRoute extends HTTPRoute {
 				// TODO GET POST处理
 				var fun:HTTPReflectRouteFunction = __methods.get(fun);
 				var args:Array<Dynamic> = [client];
-				trace(fun.args);
 				for (a in fun.args) {
-					var v = client.param.get(a.name);
+					var v:Dynamic = null;
+					// 这是GET参数
+					if (fun.method.contains(GET))
+						v = client.param.get(a.name);
+					// 这是POST参数
+					if (fun.method.contains(POST)) {
+						var v2 = client.param.post(a.name);
+						if (v2 != null) {
+							v = v2;
+						}
+					}
+					// 这是可选判断，如果不可选时提供了`null`值，那么就会被服务器拒绝
 					if (!a.opt && v == null) {
+						if (server.log)
+							Log.error("args error:", '${a.name} is null');
 						client.send('Args ${a.name} is null', SERVICE_UNAVAILABLE);
 						return false;
 					}
+					// 参数进行转义
 					var argValue:Dynamic = switch (a.type) {
 						case INT:
 							Std.parseInt(v);
@@ -123,7 +138,7 @@ typedef HTTPReflectRouteFunction = {
  * 反射请求参数
  */
 typedef HTTPReflectFunctionParam = {
-	var opt:Bool;
-	var name:String;
-	var type:HTTPRouteParamType;
+	var ?opt:Bool;
+	var ?name:String;
+	var ?type:HTTPRouteParamType;
 }
