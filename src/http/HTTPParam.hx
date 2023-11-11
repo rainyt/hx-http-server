@@ -1,5 +1,10 @@
 package http;
 
+import haxe.Exception;
+import haxe.macro.Expr;
+import http.parser.JsonData;
+import http.parser.FormData;
+
 /**
  * HTTP参数
  */
@@ -30,10 +35,30 @@ class HTTPParam {
 			var params = client.path.split("?");
 			client.path = params.shift();
 			var getParam = params.join("");
-			for (v in getParam.split("&")) {
-				var p = v.split("=");
-				__gets.set(p[0], p[1]);
+			var mapParam = new FormData();
+			mapParam.parser(getParam);
+			mapParam.copyTo(__gets);
+		}
+		try {
+			// 这里是处理POST数据
+			switch client.contentType {
+				case APPLICATION_X_WWW_FORM_URLENCODED:
+					// 表单数据
+					var mapParam = new FormData();
+					mapParam.parser(client.postData.toString());
+					mapParam.copyTo(__posts);
+				case MULTIPART_FORM_DATA:
+				// TODO
+				case APPLICATION_JSON:
+					// JSON数据
+					var mapParam = new JsonData();
+					mapParam.parser(client.postData.toString());
+					mapParam.copyTo(__posts);
+				case TEXT_XML:
+					// 默认不处理
 			}
+		} catch (e:Exception) {
+			// TODO 当捕捉到异常时，应该中断
 		}
 	}
 

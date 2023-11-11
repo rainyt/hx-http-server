@@ -51,12 +51,13 @@ class HTTPRouteManager {
 		var routeList = route.split("/");
 		var currentRoute = "/";
 		if (__route(currentRoute, client)) {
-			for (route in routeList) {
-				currentRoute += route;
-				if (__route(currentRoute, client)) {
-					currentRoute += "/";
+			if (routeList[0] != "")
+				for (route in routeList) {
+					currentRoute += route;
+					if (__route(currentRoute, client)) {
+						currentRoute += "/";
+					}
 				}
-			}
 		}
 	}
 

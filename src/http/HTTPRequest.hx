@@ -1,5 +1,7 @@
 package http;
 
+import haxe.io.BytesOutput;
+import haxe.io.Bytes;
 import haxe.io.Path;
 import sys.FileSystem;
 import sys.io.File;
@@ -46,6 +48,31 @@ class HTTPRequest {
 	public var param:HTTPParam;
 
 	/**
+	 * 来源数据
+	 */
+	private var __bytesOutput:BytesOutput;
+
+	/**
+	 * POST数据
+	 */
+	public var postData:Bytes;
+
+	/**
+	 * HOST
+	 */
+	public var host:String;
+
+	/**
+	 * 文本长度
+	 */
+	public var contentLength:Int;
+
+	/**
+	 * 上下文类型
+	 */
+	public var contentType:HTTPContentType;
+
+	/**
 	 * 获得本地文件路径
 	 * @return String
 	 */
@@ -70,7 +97,31 @@ class HTTPRequest {
 			path = headerMessage[1];
 			httpVersion = headerMessage[2];
 		}
+		__bytesOutput = new BytesOutput();
+		// 解析头数据
+		handleBytes(socket);
+		// 解析参数
 		this.param = new HTTPParam(this);
+	}
+
+	// 解析头数据
+	private function handleBytes(socket:Socket) {
+		var input = socket.input;
+		while (true) {
+			var content = input.readLine();
+			if (content == "") {
+				break;
+			}
+			var datas = content.split(" ");
+			switch datas[0] {
+				case "host:":
+					host = datas[1];
+				case "Content-Length:":
+					contentLength = Std.parseInt(datas[1]);
+			}
+		}
+		var postData = Bytes.alloc(contentLength);
+		input.readBytes(postData, 0, contentLength);
 	}
 
 	/**

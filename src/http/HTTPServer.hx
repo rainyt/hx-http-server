@@ -29,6 +29,11 @@ class HTTPServer {
 	public var route:HTTPRouteManager;
 
 	/**
+	 * 是否启动SSL
+	 */
+	public var ssl:Bool = false;
+
+	/**
 	 * 构造一个HTTP服务器
 	 * @param ip 
 	 * @param port 
@@ -45,7 +50,13 @@ class HTTPServer {
 	 * 开始启动HTTP服务器
 	 */
 	public function start():Void {
-		__server = new Socket();
+		if (ssl) {
+			var sslScoket = new sys.ssl.Socket();
+			__server = sslScoket;
+			// TODO 这里需要设置证书
+			// sslScoket.setCertificate()
+		} else
+			__server = new Socket();
 		var host = new Host(__ip);
 		try {
 			__server.bind(host, __port);
@@ -63,6 +74,8 @@ class HTTPServer {
 			var socket = __server.accept();
 			if (socket != null) {
 				try {
+					if (this.log)
+						Log.info("connecting");
 					onConnectClient(socket);
 				} catch (e:Exception) {
 					if (this.log)

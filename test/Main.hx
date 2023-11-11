@@ -13,6 +13,8 @@ class Main {
 		var ip:String = "0.0.0.0";
 		var port = 5555;
 		var http = new HTTPServer(ip, port, true);
+		// 启动SSL
+		// http.ssl = true;
 		http.start();
 		http.onConnectRequest = (http) -> {
 			var path = http.getLocalFilePath();
