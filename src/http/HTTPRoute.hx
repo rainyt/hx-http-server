@@ -16,6 +16,12 @@ class HTTPRoute implements IRoute {
 	 * @param route 
 	 */
 	public function new(route:String) {
+		if (route.charAt(0) != "/") {
+			route = "/" + route;
+		}
+		if (route.length > 1 && route.charAt(route.length - 1) == "/") {
+			route = route.substr(0, route.length - 1);
+		}
 		this.routeId = route;
 	}
 
@@ -24,7 +30,7 @@ class HTTPRoute implements IRoute {
 	 * @param client 
 	 * @return Bool
 	 */
-	dynamic public function onConnectClientEvent(client:HTTPRequest):Bool {
+	dynamic public function onConnectClientCallBack(client:HTTPRequest):Bool {
 		return true;
 	}
 
@@ -34,6 +40,6 @@ class HTTPRoute implements IRoute {
 	 * @return Bool 当返回`true`时，会继续向下一个路由进行访问，当返回`false`时，则会自动拦截。
 	 */
 	public function onConnectClient(client:HTTPRequest):Bool {
-		return onConnectClientEvent(client);
+		return onConnectClientCallBack(client);
 	}
 }

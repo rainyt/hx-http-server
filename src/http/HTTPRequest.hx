@@ -68,12 +68,12 @@ class HTTPRequest {
 	}
 
 	/**
-	 * 发送文本信息
+	 * 发送文本信息或者是二进制数据
 	 * @param text 
 	 * @param code 
 	 */
-	public function send(text:String, code:HTTPRequestCode = OK):Void {
-		var response:HTTPResponse = new HTTPResponse(code, mime, text);
+	public function send(data:Dynamic, code:HTTPRequestCode = OK):Void {
+		var response:HTTPResponse = new HTTPResponse(code, mime, data);
 		var bytes = response.getData();
 		this.client.output.writeBytes(bytes, 0, bytes.length);
 	}

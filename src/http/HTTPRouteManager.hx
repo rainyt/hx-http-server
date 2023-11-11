@@ -20,15 +20,17 @@ class HTTPRouteManager {
 	 * @param cb 路由发生请求时触发事件，返回`true`则会进入下一个路由，返回`false`则会停止进入下一个路由。
 	 */
 	public function addRoute(route:String, cb:HTTPRequest->Bool):Void {
-		if (route.charAt(0) != "/") {
-			route = "/" + route;
-		}
-		if (route.length > 1 && route.charAt(route.length - 1) == "/") {
-			route = route.substr(0, route.length - 1);
-		}
 		var newRoute = new HTTPRoute(route);
-		newRoute.onConnectClientEvent = cb;
-		routes.set(route, newRoute);
+		newRoute.onConnectClientCallBack = cb;
+		addRouteObject(newRoute);
+	}
+
+	/**
+	 * 添加路由对象
+	 * @param route 
+	 */
+	public function addRouteObject(route:IRoute):Void {
+		routes.set(route.routeId, route);
 	}
 
 	/**
