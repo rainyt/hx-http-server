@@ -15,6 +15,6 @@ class ReflectCustomObject {
 
 	public function mathDiv(value1:Int, value2:Float):Void {
 		trace("访问到call2接口，并且接受到了数据：", value1, value2);
-		http.send('int1/float=${value1 / value2}');
+		http.send('int1/float=${value1 / value2}\npaths[1]=${http.param.at(1)}');
 	}
 }
