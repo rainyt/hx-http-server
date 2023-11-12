@@ -34,3 +34,5 @@
 > 已支持`application/json`以及`application/x-www-form-urlencoded`支持，可通过`client.param.post`获得。
 - [x] HEADER头信息数据
 > 通过`client.param.header`方法获得头信息参数。
+- [x] 数据后处理
+> 通过`httpServer.onResponseAfter`接口处理最终输出的结果，可以在这里修改`client.response.data`参数处理最终输出结果。
