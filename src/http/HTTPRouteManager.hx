@@ -12,7 +12,7 @@ class HTTPRouteManager {
 	/**
 	 * 路由映射
 	 */
-	public var routes:Map<String, IRoute> = [];
+	public var routes:Map<String, Array<IRoute>> = [];
 
 	public var server:HTTPServer;
 
@@ -25,10 +25,10 @@ class HTTPRouteManager {
 	 * @param route 一般指的是请求路由，一般为：/api/get2/name3
 	 * @param cb 路由发生请求时触发事件，返回`true`则会进入下一个路由，返回`false`则会停止进入下一个路由。
 	 */
-	public function addRoute(route:String, cb:HTTPRequest->Bool):Void {
+	public function addRoute(route:String, cb:HTTPRequest->Bool, ?methods:Array<HTTPRequestMethod>):Void {
 		var newRoute = new HTTPRoute(route);
 		newRoute.onConnectClientCallBack = cb;
-		addRouteObject(newRoute);
+		addRouteObject(newRoute, methods);
 	}
 
 	/**
@@ -36,20 +36,22 @@ class HTTPRouteManager {
 	 * @param route 
 	 * @param object 
 	 */
-	public function addReflectRoute(route:String, object:HTTPReflectCustomObject):Void {
-		this.addRouteObject(new HTTPReflectRoute(route, object));
+	public function addReflectRoute(route:String, object:HTTPReflectCustomObject, ?methods:Array<HTTPRequestMethod>):Void {
+		this.addRouteObject(new HTTPReflectRoute(route, object), methods);
 	}
 
 	/**
 	 * 添加路由对象
 	 * @param route 
 	 */
-	public function addRouteObject(route:IRoute):Void {
-		if (routes.exists(route.routeId)) {
-			routes.get(route.routeId).server = null;
+	public function addRouteObject(route:IRoute, ?methods:Array<HTTPRequestMethod>):Void {
+		if (!routes.exists(route.routeId)) {
+			routes.set(route.routeId, []);
 		}
 		route.server = this.server;
-		routes.set(route.routeId, route);
+		if (methods != null)
+			route.methods = methods.copy();
+		routes.get(route.routeId).push(route);
 		route.onInit();
 	}
 
@@ -80,7 +82,13 @@ class HTTPRouteManager {
 	 */
 	private function __route(route:String, client:HTTPRequest):Bool {
 		if (routes.exists(route)) {
-			return routes.get(route).onConnectClient(client);
+			var list = routes.get(route);
+			for (route in list) {
+				if (route.methods == null || route.methods.contains(client.method))
+					if (!route.onConnectClient(client))
+						return false;
+			}
+			return true;
 		}
 		return true;
 	}

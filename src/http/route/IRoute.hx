@@ -12,6 +12,11 @@ interface IRoute {
 	public var server:HTTPServer;
 
 	/**
+	 * 路由方法，如果没有提供，则`GET`、`POST`都允许访问，如果提供了对应的方法，则需要指定的方法才能访问
+	 */
+	public var methods:Array<HTTPRequestMethod>;
+
+	/**
 	 * 初始化处理，这个时候已经存在server了
 	 */
 	public function onInit():Void;

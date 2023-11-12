@@ -12,6 +12,11 @@ class HTTPRoute implements IRoute {
 	public var routeId:String;
 
 	/**
+	 * 路由方法，如果没有提供，则`GET`、`POST`都允许访问，如果提供了对应的方法，则需要指定的方法才能访问
+	 */
+	public var methods:Array<HTTPRequestMethod>;
+
+	/**
 	 * 服务
 	 */
 	public var server:HTTPServer;
