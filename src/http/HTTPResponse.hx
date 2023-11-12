@@ -54,14 +54,16 @@ class HTTPResponse {
 		var bytesOutput:BytesOutput = new BytesOutput();
 		bytesOutput.writeString("HTTP/1.1 " + code + " " + HTTPRequestCode.toMessageString(code));
 		bytesOutput.writeString("\r\n");
-		bytesOutput.writeString("Content-Length: " + __data.length);
+		bytesOutput.writeString("Content-Length: " + (__data == null ? 0 : __data.length));
 		bytesOutput.writeString("\r\n");
 		bytesOutput.writeString("Content-Type: " + mime);
 		bytesOutput.writeString("\r\n");
 		bytesOutput.writeString("Access-Control-Allow-Origin: *"); // js fetch is stupid
 		bytesOutput.writeString("\r\n");
 		bytesOutput.writeString("\r\n");
-		bytesOutput.writeBytes(__data, 0, __data.length);
+		if (__data != null) {
+			bytesOutput.writeBytes(__data, 0, __data.length);
+		}
 		bytesOutput.writeString("\r\n");
 		return bytesOutput.getBytes();
 	}
