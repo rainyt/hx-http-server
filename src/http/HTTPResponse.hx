@@ -7,11 +7,32 @@ import haxe.io.Bytes;
  * 信息包装
  */
 class HTTPResponse {
-	private var __code:HTTPRequestCode;
+	public var code:HTTPRequestCode;
 
 	private var __data:Bytes;
 
-	private var __mime:String;
+	public var data(never, set):Dynamic;
+
+	private function set_data(v:Dynamic):Dynamic {
+		if (v is String) {
+			this.__data = Bytes.ofString(v);
+		} else if (v is Bytes)
+			this.__data = v;
+		else {
+			this.__data = null;
+		}
+		return v;
+	}
+
+	/**
+	 * 获得当前文本的内容
+	 * @return Bytes
+	 */
+	public function getDataBytes():Bytes {
+		return __data;
+	}
+
+	public var mime:String;
 
 	/**
 	 * 构造信息包装一般需要提供二进制数据或者是文本数据
@@ -19,26 +40,23 @@ class HTTPResponse {
 	 * @param mime 
 	 * @param data 
 	 */
-	public function new(code:HTTPRequestCode, mime:String, data:Dynamic) {
-		this.__code = code;
-		this.__mime = mime;
-		if (data is String) {
-			this.__data = Bytes.ofString(data);
-		} else if (data is Bytes)
-			this.__data = data;
+	public function new(code:HTTPRequestCode = OK, ?mime:String, ?data:Dynamic) {
+		this.code = code;
+		this.mime = mime;
+		this.data = data;
 	}
 
 	/**
 	 * 获得二进制数据
 	 * @return Bytes
 	 */
-	public function getData():Bytes {
+	public function getResponseData():Bytes {
 		var bytesOutput:BytesOutput = new BytesOutput();
-		bytesOutput.writeString("HTTP/1.1 " + __code + " " + HTTPRequestCode.toMessageString(__code));
+		bytesOutput.writeString("HTTP/1.1 " + code + " " + HTTPRequestCode.toMessageString(code));
 		bytesOutput.writeString("\r\n");
 		bytesOutput.writeString("Content-Length: " + __data.length);
 		bytesOutput.writeString("\r\n");
-		bytesOutput.writeString("Content-Type: " + __mime);
+		bytesOutput.writeString("Content-Type: " + mime);
 		bytesOutput.writeString("\r\n");
 		bytesOutput.writeString("Access-Control-Allow-Origin: *"); // js fetch is stupid
 		bytesOutput.writeString("\r\n");

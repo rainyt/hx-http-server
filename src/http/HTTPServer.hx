@@ -90,6 +90,12 @@ class HTTPServer {
 	dynamic public function onConnectRequest(http:HTTPRequest):Void {}
 
 	/**
+	 * 信息数据后处理
+	 * @param http 
+	 */
+	dynamic public function onResponseAfter(http:HTTPRequest):Void {}
+
+	/**
 	 * 创建线程管理
 	 * @param client 
 	 */
@@ -100,6 +106,9 @@ class HTTPServer {
 				var http = new HTTPRequest(client, this, head);
 				route.callRoute(http.path, http);
 				onConnectRequest(http);
+				// 发送路由信息
+				onResponseAfter(http);
+				@:privateAccess http.__send();
 			});
 		} else {
 			client.close();

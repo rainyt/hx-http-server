@@ -117,6 +117,7 @@ class HTTPReflectRoute extends HTTPRoute {
 			} else {
 				if (client.server.log)
 					Log.error("reflect call fail:", fun, " by path " + client.path);
+				client.send("Not found " + client.path, NOT_FOUND);
 			}
 		} else {
 			// 方法不存在

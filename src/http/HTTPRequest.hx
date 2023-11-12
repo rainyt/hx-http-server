@@ -129,13 +129,26 @@ class HTTPRequest {
 	}
 
 	/**
+	 * 即将发送的上下文内容
+	 */
+	public var response:HTTPResponse = new HTTPResponse();
+
+	/**
 	 * 发送文本信息或者是二进制数据
 	 * @param text 
 	 * @param code 
 	 */
 	public function send(data:Dynamic, code:HTTPRequestCode = OK):Void {
-		var response:HTTPResponse = new HTTPResponse(code, mime, data);
-		var bytes = response.getData();
+		response.code = code;
+		response.data = data;
+		response.mime = mime;
+	}
+
+	/**
+	 * 最终结算并发送
+	 */
+	@:noCompletion private function __send():Void {
+		var bytes = response.getResponseData();
 		this.client.output.writeBytes(bytes, 0, bytes.length);
 	}
 
@@ -149,15 +162,15 @@ class HTTPRequest {
 		if (FileSystem.exists(path)) {
 			if (server.log)
 				Log.info("sendFile", path);
-			var response:HTTPResponse = new HTTPResponse(code, mime, File.getBytes(path));
-			var bytes = response.getData();
-			this.client.output.writeBytes(bytes, 0, bytes.length);
+			response.code = code;
+			response.mime = mime;
+			response.data = File.getBytes(path);
 		} else {
 			if (server.log)
 				Log.info("not found", path);
-			var response:HTTPResponse = new HTTPResponse(NOT_FOUND, mime, "Not found " + filePath);
-			var bytes = response.getData();
-			this.client.output.writeBytes(bytes, 0, bytes.length);
+			response.code = NOT_FOUND;
+			response.mime = mime;
+			response.data = "Not found " + filePath;
 		}
 	}
 }
