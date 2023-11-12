@@ -1,7 +1,7 @@
 package http.macro;
 
+#if macro
 import http.route.HTTPReflectRoute.HTTPReflectFunctionParam;
-import haxe.DynamicAccess;
 import haxe.macro.Context;
 import haxe.macro.Expr.Field;
 
@@ -10,9 +10,15 @@ import haxe.macro.Expr.Field;
  * 第一步：
  * 将会产生一个`reflectMaps`的方法反射映射字典对象，以便反射的时候，可以直接读取到方法。
  */
-#if macro
 class ReflectRouteMacro {
 	public static function build():Array<Field> {
+		// 是否存在全局定义支持
+		var localMethods:Array<HTTPRequestMethod> = [];
+		var localClass = Context.getLocalClass();
+		var localMeta = localClass.get().meta.get();
+		if (localMeta.filter((f) -> f.name == ":post").length > 0) {
+			localMethods.push(POST);
+		}
 		var fileds = Context.getBuildFields();
 		// 这是方法属性定义
 		var reflectMaps:Map<String, Array<HTTPReflectFunctionParam>> = [];
@@ -27,7 +33,7 @@ class ReflectRouteMacro {
 					case FFun(f):
 						var methods:Array<HTTPRequestMethod> = [];
 						var array = item.meta.filter((f) -> f.name == ":post");
-						if (array.length > 0) {
+						if (array.length > 0 || localMethods.contains(POST)) {
 							// POST请求
 							methods.push(POST);
 						}
