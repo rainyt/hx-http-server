@@ -14,6 +14,9 @@ class HTTPRouteManager {
 	 */
 	public var routes:Map<String, Array<IRoute>> = [];
 
+	/**
+	 * 服务
+	 */
 	public var server:HTTPServer;
 
 	public function new(server:HTTPServer) {

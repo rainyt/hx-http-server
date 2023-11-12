@@ -21,6 +21,11 @@ class HTTPParam {
 	private var __posts:Map<String, String> = [];
 
 	/**
+	 * 已缓存的头信息
+	 */
+	private var __header:Map<String, String> = [];
+
+	/**
 	 * 请求对象
 	 */
 	public var client:HTTPRequest;
@@ -32,6 +37,12 @@ class HTTPParam {
 	public function new(client:HTTPRequest) {
 		// 这里是处理GET参数
 		this.client = client;
+	}
+
+	/**
+	 * 解析数据
+	 */
+	public function parserData():Void {
 		if (client.path.indexOf("?") != -1) {
 			var params = client.path.split("?");
 			client.path = params.shift();
@@ -64,6 +75,15 @@ class HTTPParam {
 			// TODO 当捕捉到异常时，应该中断
 			Log.error("parser data error:" + e.message, e.stack.toString());
 		}
+	}
+
+	/**
+	 * 获得`头信息`中的信息，通过键值
+	 * @param key 
+	 * @return String
+	 */
+	public function header(key:String):String {
+		return __header.get(key);
 	}
 
 	/**
@@ -109,5 +129,7 @@ class HTTPParam {
 	 * 追加参数数据
 	 * @param data 
 	 */
-	public function pushStringParam(data:String):Void {}
+	public function pushHeader(key:String, value:String):Void {
+		__header.set(key, value);
+	}
 }

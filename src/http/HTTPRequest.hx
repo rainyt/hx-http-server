@@ -99,9 +99,10 @@ class HTTPRequest {
 		}
 		__bytesOutput = new BytesOutput();
 		// 解析头数据
-		handleBytes(socket);
-		// 解析参数
 		this.param = new HTTPParam(this);
+		this.handleBytes(socket);
+		// 解析参数
+		this.param.parserData();
 	}
 
 	// 解析头数据
@@ -121,6 +122,9 @@ class HTTPRequest {
 				case "Content-Type:":
 					contentType = datas[1];
 			}
+			var key = datas[0];
+			key = key.substr(0, key.length - 1);
+			this.param.pushHeader(key, datas[1]);
 		}
 		if (contentLength > 0) {
 			postData = Bytes.alloc(contentLength);
