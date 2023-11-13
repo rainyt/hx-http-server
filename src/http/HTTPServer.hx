@@ -101,7 +101,9 @@ class HTTPServer {
 	 */
 	private function onConnectClient(client:Socket):Void {
 		var head:String = client.input.readLine();
-		if (head.indexOf("GET") == 0 || head.indexOf("POST") == 0) {
+		if (this.log)
+			Log.info("connect head:", head);
+		if (head.indexOf("GET") == 0 || head.indexOf("POST") == 0 || head.indexOf("OPTIONS") == 0) {
 			Thread.create(() -> {
 				var http = new HTTPRequest(client, this, head);
 				route.callRoute(http.path, http);
