@@ -58,7 +58,9 @@ class HTTPResponse {
 		bytesOutput.writeString("\r\n");
 		bytesOutput.writeString("Content-Type: " + mime);
 		bytesOutput.writeString("\r\n");
-		bytesOutput.writeString("Access-Control-Allow-Origin: *"); // js fetch is stupid
+		bytesOutput.writeString("Access-Control-Allow-Origin: *");
+		bytesOutput.writeString("\r\n");
+		bytesOutput.writeString("Access-Control-Allow-Headers: *");
 		bytesOutput.writeString("\r\n");
 		bytesOutput.writeString("\r\n");
 		if (__data != null) {

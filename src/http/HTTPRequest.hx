@@ -153,6 +153,9 @@ class HTTPRequest {
 	 */
 	@:noCompletion private function __send():Void {
 		var bytes = response.getResponseData();
+		if (server.log) {
+			Log.warring(bytes.toString());
+		}
 		this.client.output.writeBytes(bytes, 0, bytes.length);
 	}
 
