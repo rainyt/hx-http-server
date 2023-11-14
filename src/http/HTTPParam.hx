@@ -15,15 +15,27 @@ class HTTPParam {
 	 */
 	private var __gets:Map<String, String> = [];
 
+	public function getFields():Map<String, String> {
+		return __gets;
+	}
+
 	/**
 	 * 已缓存的POST参数
 	 */
 	private var __posts:Map<String, String> = [];
 
+	public function postFields():Map<String, String> {
+		return __posts;
+	}
+
 	/**
 	 * 已缓存的头信息
 	 */
 	private var __header:Map<String, String> = [];
+
+	public function headerFields():Map<String, String> {
+		return __header;
+	}
 
 	/**
 	 * 请求对象
