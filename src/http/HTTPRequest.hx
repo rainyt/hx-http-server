@@ -1,5 +1,6 @@
 package http;
 
+import haxe.Exception;
 import haxe.Json;
 import haxe.io.BytesOutput;
 import haxe.io.Bytes;
@@ -110,7 +111,10 @@ class HTTPRequest {
 	private function handleBytes(socket:Socket) {
 		var input = socket.input;
 		while (true) {
-			var content = input.readLine();
+			var content:String = null;
+			content = input.readLine();
+			if (server.log)
+				Log.info(content);
 			if (content == "") {
 				break;
 			}
@@ -126,8 +130,6 @@ class HTTPRequest {
 			var key = datas[0];
 			key = key.substr(0, key.length - 1);
 			this.param.pushHeader(key, datas[1]);
-			if (server.log)
-				Log.info(content);
 		}
 		if (contentLength > 0) {
 			postData = Bytes.alloc(contentLength);
