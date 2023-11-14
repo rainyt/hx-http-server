@@ -1,5 +1,6 @@
 package http;
 
+import haxe.Json;
 import haxe.io.BytesOutput;
 import haxe.io.Bytes;
 import haxe.io.Path;
@@ -114,17 +115,19 @@ class HTTPRequest {
 				break;
 			}
 			var datas = content.split(" ");
-			switch datas[0] {
+			switch datas[0].toLowerCase() {
 				case "host:":
 					host = datas[1];
-				case "Content-Length:":
+				case "content-length:":
 					contentLength = Std.parseInt(datas[1]);
-				case "Content-Type:":
+				case "content-type:":
 					contentType = datas[1];
 			}
 			var key = datas[0];
 			key = key.substr(0, key.length - 1);
 			this.param.pushHeader(key, datas[1]);
+			if (server.log)
+				Log.info(content);
 		}
 		if (contentLength > 0) {
 			postData = Bytes.alloc(contentLength);
@@ -179,5 +182,20 @@ class HTTPRequest {
 			response.mime = mime;
 			response.data = "Not found " + filePath;
 		}
+	}
+
+	/**
+	 * 返回整体内容
+	 * @return String
+	 */
+	public function toMessageString():String {
+		var obj = {
+			path: path,
+			method: method,
+			_get: @:privateAccess param.__gets,
+			_post: @:privateAccess param.__posts,
+			_header: @:privateAccess param.__header
+		};
+		return Json.stringify(obj);
 	}
 }

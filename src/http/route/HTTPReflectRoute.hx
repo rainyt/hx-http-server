@@ -51,6 +51,10 @@ class HTTPReflectRoute extends HTTPRoute {
 		super.onInit();
 		var reflectMaps:Map<String, Array<HTTPReflectFunctionParam>> = reflectObject.getProperty("reflectMaps");
 		var reflectMethodMaps:Map<String, Array<HTTPRequestMethod>> = reflectObject.getProperty("reflectMethodMaps");
+		if (server.log) {
+			Log.info(reflectMaps.toString());
+			Log.info(reflectMethodMaps.toString());
+		}
 		var className = Type.getClassName(Type.getClass(reflectObject));
 		for (key => value in reflectMaps) {
 			var fun:Dynamic = reflectObject.getProperty(key);
