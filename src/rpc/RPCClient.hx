@@ -1,5 +1,6 @@
 package rpc;
 
+import haxe.Rest;
 import haxe.Json;
 import haxe.io.Bytes;
 import sys.net.Host;
@@ -37,6 +38,7 @@ class RPCClient extends RPCRequest {
 	 * @return Dynamic
 	 */
 	public function callMethod(func:String, ...args:Dynamic):Dynamic {
+		var list = args.toArray();
 		var output = client.output;
 		// 方法名
 		this.writeString(func);

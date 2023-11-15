@@ -34,6 +34,19 @@ class HTTPRouteManager {
 		addRouteObject(newRoute, methods);
 	}
 
+	public function getRoute(route:String):Dynamic {
+		return routes.get(route);
+	}
+
+	public function getReflectRouteObject(route:String):Dynamic {
+		for (route in routes.get(route)) {
+			if (route is HTTPReflectRoute) {
+				return cast(route, HTTPReflectRoute).reflectObject;
+			}
+		}
+		return null;
+	}
+
 	/**
 	 * 添加反射对象路由
 	 * @param route 

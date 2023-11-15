@@ -107,8 +107,8 @@ class HTTPRequest extends SocketClient {
 		while (true) {
 			var content:String = null;
 			content = input.readLine();
-			if (server.log)
-				Log.info(content);
+			// if (server.log)
+			// Log.info(content);
 			if (content == "") {
 				break;
 			}

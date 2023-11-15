@@ -1,5 +1,7 @@
 package rpc;
 
+import haxe.Serializer;
+import haxe.Unserializer;
 import haxe.Json;
 import haxe.io.Bytes;
 import net.SocketClient;
@@ -44,27 +46,37 @@ class RPCRequest extends SocketClient {
 					state = ARGS_COUNTS;
 				case ARGS_COUNTS:
 					counts = input.readInt16();
-					state = ARGS_TYPE;
+					if (counts == 0) {
+						state = CALL;
+					} else {
+						state = ARGS_TYPE;
+					}
 				case ARGS_TYPE:
 					type = input.readInt8();
 					state = ARGS_VALUE;
 				case ARGS_VALUE:
-					counts--;
-					args.push(readArgsValue(type));
 					if (counts > 0) {
-						state = ARGS_TYPE;
-					} else {
-						state = METHOD;
-						// 这个时候就要调用方法了
-						var returnValue = cast(this.server, RPCServer).protocol?.callMethod(methodName, args);
-						if (returnValue != null) {
-							this.writeArgsValue(returnValue);
+						counts--;
+						args.push(readArgsValue(type));
+						if (counts == 0) {
+							state = CALL;
 						} else {
-							client.output.writeInt8(RPCType.VIOD);
+							state = ARGS_TYPE;
 						}
-						client.close();
-						break;
+					} else {
+						state = CALL;
 					}
+				case CALL:
+					// 这个时候就要调用方法了
+					trace("CALL调用：", methodName, args);
+					var returnValue = cast(this.server, RPCServer).protocol?.callMethod(methodName, args);
+					if (returnValue != null) {
+						this.writeArgsValue(returnValue);
+					} else {
+						client.output.writeInt8(RPCType.VIOD);
+					}
+					client.close();
+					break;
 			}
 		}
 	}
@@ -98,7 +110,7 @@ class RPCRequest extends SocketClient {
 		} else {
 			// Object
 			output.writeInt8(RPCType.OBJECT);
-			writeString(Json.stringify(value));
+			writeString(Serializer.run(value));
 		}
 	}
 
@@ -128,7 +140,7 @@ class RPCRequest extends SocketClient {
 				// 字节
 				return (readBytes());
 			case OBJECT:
-				return (Json.stringify(readString()));
+				return (Unserializer.run(readString()));
 		}
 		return null;
 	}
@@ -184,4 +196,9 @@ enum abstract RPCParserState(Int) to Int from Int {
 	 * 获得参数值
 	 */
 	var ARGS_VALUE = 3;
+
+	/**
+	 * 调用
+	 */
+	var CALL = 4;
 }
