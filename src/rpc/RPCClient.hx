@@ -9,6 +9,16 @@ import sys.net.Socket;
  * RPC客户端
  */
 class RPCClient extends RPCRequest {
+	/**
+	 * 创建一个RPC链接
+	 * @param ip 
+	 * @param port 
+	 * @return RPCClient
+	 */
+	public static function connect(ip:String, port):RPCClient {
+		return new RPCClient(ip, port);
+	}
+
 	public function new(ip:String, port:Int) {
 		var client = new Socket();
 		client.connect(new Host(ip), port);

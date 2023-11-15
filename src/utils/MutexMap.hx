@@ -22,4 +22,14 @@ class MutexMap<T2> {
 		__maps.set(id, v);
 		__mutex.release();
 	}
+
+	public function exists(id:String):Bool {
+		return __maps.exists(id);
+	}
+
+	public function remove(id:String):Void {
+		__mutex.acquire();
+		__maps.remove(id);
+		__mutex.release();
+	}
 }
