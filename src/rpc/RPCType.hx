@@ -5,6 +5,11 @@ package rpc;
  */
 enum abstract RPCType(Int) to Int from Int {
 	/**
+	 * 无返回值
+	 */
+	var VIOD = 0;
+
+	/**
 	 * Int类型
 	 */
 	var INT = 1;

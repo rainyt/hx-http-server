@@ -9,7 +9,12 @@ import net.SocketServer;
 /**
  * RPC协议服务器
  */
-class RPCServer extends SocketServer {
+class RPCServer extends SocketServer implements IRPCProtocol {
+	/**
+	 * 协议
+	 */
+	public var protocol:RPC;
+
 	override function onConnectClient(client:Socket) {
 		super.onConnectClient(client);
 		Thread.create(() -> {

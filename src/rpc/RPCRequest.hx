@@ -50,34 +50,87 @@ class RPCRequest extends SocketClient {
 					state = ARGS_VALUE;
 				case ARGS_VALUE:
 					counts--;
-					switch type {
-						case INT:
-							// Int类型
-							args.push(input.readInt32());
-						case BOOL:
-							// 布尔值
-							args.push(input.readInt8() == 1);
-						case FLOAT:
-							// 浮点类型
-							args.push(input.readFloat());
-						case STRING:
-							// 字符
-							args.push(readString());
-						case BYTES:
-							// 字节
-							args.push(readBytes());
-						case OBJECT:
-							args.push(Json.stringify(readString()));
-					}
+					args.push(readArgsValue(type));
 					if (counts > 0) {
 						state = ARGS_TYPE;
 					} else {
 						state = METHOD;
 						// 这个时候就要调用方法了
-						trace("调用方法", methodName, args);
+						var returnValue = cast(this.server, RPCServer).protocol?.callMethod(methodName, args);
+						if (returnValue != null) {
+							this.writeArgsValue(returnValue);
+						} else {
+							client.output.writeInt8(RPCType.VIOD);
+						}
+						client.close();
+						break;
 					}
 			}
 		}
+	}
+
+	/**
+	 * 写入一个参数
+	 * @param value 
+	 */
+	private function writeArgsValue(value:Dynamic) {
+		var output = client.output;
+		if (value is Int) {
+			// 整数
+			output.writeInt8(RPCType.INT);
+			output.writeInt32(value);
+		} else if (value is Float) {
+			// 浮点
+			output.writeInt8(RPCType.FLOAT);
+			output.writeFloat(value);
+		} else if (value is Bool) {
+			// 布尔值
+			output.writeInt8(RPCType.BOOL);
+			output.writeInt8(value == true ? 1 : 0);
+		} else if (value is String) {
+			// 字符串
+			output.writeInt8(RPCType.STRING);
+			writeString(value);
+		} else if (value is Bytes) {
+			// 字节
+			output.writeInt8(RPCType.BYTES);
+			writeBytes(value);
+		} else {
+			// Object
+			output.writeInt8(RPCType.OBJECT);
+			writeString(Json.stringify(value));
+		}
+	}
+
+	/**
+	 * 读取一个参数
+	 * @param type 
+	 * @return Dynamic
+	 */
+	private function readArgsValue(type:RPCType):Dynamic {
+		var input = client.input;
+		switch type {
+			case VIOD:
+				return null;
+			case INT:
+				// Int类型
+				return (input.readInt32());
+			case BOOL:
+				// 布尔值
+				return (input.readInt8() == 1);
+			case FLOAT:
+				// 浮点类型
+				return (input.readFloat());
+			case STRING:
+				// 字符
+				return (readString());
+			case BYTES:
+				// 字节
+				return (readBytes());
+			case OBJECT:
+				return (Json.stringify(readString()));
+		}
+		return null;
 	}
 
 	private function writeBytes(bytes:Bytes):Void {

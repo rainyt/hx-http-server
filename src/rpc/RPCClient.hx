@@ -35,32 +35,13 @@ class RPCClient extends RPCRequest {
 		output.writeInt16(array.length);
 		// 参数传递
 		for (value in array) {
-			if (value is Int) {
-				// 整数
-				output.writeInt8(RPCType.INT);
-				output.writeInt32(value);
-			} else if (value is Float) {
-				// 浮点
-				output.writeInt8(RPCType.FLOAT);
-				output.writeFloat(value);
-			} else if (value is Bool) {
-				// 布尔值
-				output.writeInt8(RPCType.BOOL);
-				output.writeInt8(value == true ? 1 : 0);
-			} else if (value is String) {
-				// 字符串
-                output.writeInt8(RPCType.STRING);
-				writeString(value);
-			} else if (value is Bytes) {
-				// 字节
-                output.writeInt8(RPCType.BYTES);
-				writeBytes(value);
-			} else {
-				// Object
-                output.writeInt8(RPCType.OBJECT);
-				writeString(Json.stringify(value));
-			}
+			writeArgsValue(value);
 		}
-		return null;
+		// 读取返回值
+		var input = client.input;
+		while (true) {
+			var type:RPCType = input.readInt8();
+			return readArgsValue(type);
+		}
 	}
 }
