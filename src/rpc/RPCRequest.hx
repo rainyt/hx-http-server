@@ -68,7 +68,6 @@ class RPCRequest extends SocketClient {
 					}
 				case CALL:
 					// 这个时候就要调用方法了
-					trace("CALL调用：", methodName, args);
 					var returnValue = cast(this.server, RPCServer).protocol?.callMethod(methodName, args);
 					if (returnValue != null) {
 						this.writeArgsValue(returnValue);
