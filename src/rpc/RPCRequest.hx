@@ -65,10 +65,7 @@ class RPCRequest extends SocketClient {
 							args.push(readString());
 						case BYTES:
 							// 字节
-							var length = input.readInt32();
-							var bytes = Bytes.alloc(length);
-							input.readFullBytes(bytes, 0, length);
-							args.push(bytes);
+							args.push(readBytes());
 						case OBJECT:
 							args.push(Json.stringify(readString()));
 					}
@@ -81,6 +78,27 @@ class RPCRequest extends SocketClient {
 					}
 			}
 		}
+	}
+
+	private function writeBytes(bytes:Bytes):Void {
+		client.output.writeInt32(bytes.length);
+		client.output.writeFullBytes(bytes, 0, bytes.length);
+	}
+
+	private function readBytes():Bytes {
+		var length = client.input.readInt32();
+		var bytes = Bytes.alloc(length);
+		client.input.readFullBytes(bytes, 0, length);
+		return bytes;
+	}
+
+	/**
+	 * 写入字符串
+	 * @param v 
+	 */
+	private function writeString(v:String):Void {
+		client.output.writeInt32(Bytes.ofString(v).length);
+		client.output.writeString(v);
 	}
 
 	/**

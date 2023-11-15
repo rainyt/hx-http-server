@@ -1,0 +1,4 @@
+--main RPCMain
+--class-path test
+--library hx-http-server
+--interp

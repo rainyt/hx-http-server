@@ -1,5 +1,7 @@
 package net;
 
+import utils.Log;
+import haxe.Exception;
 import sys.net.Socket;
 
 /**
@@ -17,7 +19,13 @@ class SocketClient {
 	public var server:SocketServer;
 
 	public function new(client:Socket, server:SocketServer) {
-		this.onWork();
+		this.client = client;
+		this.server = server;
+		try {
+			this.onWork();
+		} catch (e:Exception) {
+			Log.exception(e);
+		}
 	}
 
 	public function onWork():Void {}

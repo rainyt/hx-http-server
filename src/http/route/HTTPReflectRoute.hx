@@ -67,7 +67,6 @@ class HTTPReflectRoute extends HTTPRoute {
 					args: value,
 					method: reflectMethodMaps.get(key)
 				});
-				trace(key, reflectMethodMaps.get(key));
 			}
 		}
 	}

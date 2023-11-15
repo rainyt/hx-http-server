@@ -67,13 +67,13 @@ class SocketServer {
 
 	public function onServerRuning():Void {
 		while (__runing) {
-			var socket = __server.accept();
-			if (socket != null) {
-				try {
+			try {
+				var socket = __server.accept();
+				if (socket != null) {
 					onConnectClient(socket);
-				} catch (e:Exception) {
-					Log.exception(e);
 				}
+			} catch (e:Exception) {
+				Log.exception(e);
 			}
 		}
 	}

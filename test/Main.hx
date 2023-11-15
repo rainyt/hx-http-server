@@ -23,11 +23,11 @@ class Main {
 		}
 		// 路由功能测试
 		http.route.addRoute("/", (http) -> {
-			trace("访问到了/路由", http.path);
+			Log.warring("访问到了/路由", http.path);
 			return true;
 		});
 		http.route.addRoute("/index.html", (http) -> {
-			trace("访问到了/index.html路由", http.path);
+			Log.warring("访问到了/index.html路由", http.path);
 			return true;
 		});
 		// 自定义路由功能

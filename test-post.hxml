@@ -1,3 +1,4 @@
 --main PostMain
 --class-path test
 --interp
+--library hx-http-server
