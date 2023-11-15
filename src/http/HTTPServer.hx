@@ -10,6 +10,9 @@ import sys.net.Socket;
  * HTTP服务器支持
  */
 class HTTPServer extends SocketServer {
+	/**
+	 * 服务器目录
+	 */
 	public var webDir:String = "./";
 
 	/**
@@ -61,7 +64,7 @@ class HTTPServer extends SocketServer {
 				} catch (e:Exception) {
 					if (http != null)
 						Log.error(http.toMessageString());
-					Log.error(e.message, e.stack.toString());
+					Log.exception(e);
 					http.send(e.message, SERVICE_UNAVAILABLE);
 					onResponseAfter(http);
 					@:privateAccess http.__send();

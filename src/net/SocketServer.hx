@@ -72,8 +72,7 @@ class SocketServer {
 				try {
 					onConnectClient(socket);
 				} catch (e:Exception) {
-					if (this.log)
-						Log.error(e.message);
+					Log.exception(e);
 				}
 			}
 		}

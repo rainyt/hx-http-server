@@ -84,8 +84,7 @@ class HTTPParam {
 				}
 			}
 		} catch (e:Exception) {
-			// TODO 当捕捉到异常时，应该中断
-			Log.error("parser data error:" + e.message, e.stack.toString());
+			Log.exception(e);
 		}
 	}
 

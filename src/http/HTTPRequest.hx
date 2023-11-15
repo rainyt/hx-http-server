@@ -1,5 +1,6 @@
 package http;
 
+import net.SocketClient;
 import haxe.Exception;
 import haxe.Json;
 import haxe.io.BytesOutput;
@@ -13,17 +14,7 @@ import sys.net.Socket;
 /**
  * 网络请求
  */
-class HTTPRequest {
-	/**
-	 * 当前服务
-	 */
-	public var server:HTTPServer;
-
-	/**
-	 * 客户端
-	 */
-	public var client:Socket;
-
+class HTTPRequest extends SocketClient {
 	/**
 	 * 请求文件
 	 */
@@ -79,7 +70,7 @@ class HTTPRequest {
 	 * @return String
 	 */
 	public function getLocalFilePath():String {
-		return Path.join([server.webDir, path]);
+		return Path.join([cast(server, HTTPServer).webDir, path]);
 	}
 
 	/**
@@ -89,8 +80,6 @@ class HTTPRequest {
 	 * @param head 头信息
 	 */
 	public function new(socket:Socket, server:HTTPServer, head:String) {
-		this.server = server;
-		this.client = socket;
 		if (server.log)
 			Log.info("header message:", head);
 		if (head != null) {
@@ -99,10 +88,15 @@ class HTTPRequest {
 			path = headerMessage[1];
 			httpVersion = headerMessage[2];
 		}
+		super(socket, server);
+	}
+
+	override function onWork() {
+		super.onWork();
 		__bytesOutput = new BytesOutput();
 		// 解析头数据
 		this.param = new HTTPParam(this);
-		this.handleBytes(socket);
+		this.handleBytes(this.client);
 		// 解析参数
 		this.param.parserData();
 	}
@@ -170,7 +164,7 @@ class HTTPRequest {
 	 * @param code 
 	 */
 	public function sendFile(filePath:String, code:HTTPRequestCode = OK):Void {
-		var path = Path.join([server.webDir, filePath]);
+		var path = Path.join([cast(server, HTTPServer).webDir, filePath]);
 		if (FileSystem.exists(path)) {
 			if (server.log)
 				Log.info("sendFile", path);
