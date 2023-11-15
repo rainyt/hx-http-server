@@ -2,6 +2,8 @@
 通过Haxe编写的HTTP服务器，基本功能已经准备好，正进入生产阶段。
 
 ## 支持
+### RPC支持
+带有常用的RPC接口，可参考`test/RPCMain.hx`
 ### 基础的HTTP服务功能
 ```haxe
 // 创建基础的HTTP侦听服务
