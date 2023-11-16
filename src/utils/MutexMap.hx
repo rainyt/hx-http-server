@@ -9,6 +9,12 @@ class MutexMap<T2> {
 	private var __maps:Map<String, T2>;
 	private var __mutex:Mutex = new Mutex();
 
+	public var data(get, never):Map<String, T2>;
+
+	function get_data():Map<String, T2> {
+		return __maps;
+	}
+
 	public function new() {
 		__maps = new Map();
 	}

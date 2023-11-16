@@ -29,4 +29,12 @@ class SocketClient {
 	}
 
 	public function onWork():Void {}
+
+	public function close():Void {
+		// try {
+		// client.close();
+		// } catch (e:Exception) {}
+		server = null;
+		client = null;
+	}
 }

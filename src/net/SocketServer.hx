@@ -1,5 +1,6 @@
 package net;
 
+import sys.thread.Thread;
 import haxe.Exception;
 import sys.net.Host;
 import sys.net.Socket;
@@ -35,13 +36,24 @@ class SocketServer {
 	 */
 	public var ssl:Bool = false;
 
+	/**
+	 * 最大链接数
+	 */
+	public var maxThreadCounts = 1024;
+
 	private var __server:Socket;
 
 	public function new(ip:String, port:Int, log:Bool = false) {
 		this.log = log;
 		this.ip = ip;
 		this.port = port;
+		this.onInit();
 	}
+
+	/**
+	 * 初始化处理
+	 */
+	public function onInit():Void {}
 
 	public function start():Void {
 		if (ssl) {
@@ -54,12 +66,12 @@ class SocketServer {
 		var host = new Host(ip);
 		try {
 			__server.bind(host, port);
-			__server.listen(1024);
+			__server.listen(maxThreadCounts);
 		} catch (e:Exception) {
 			throw e;
 		}
-		Log.info("excPath", Sys.getCwd());
-		Log.info("listener", ip + ":" + port);
+		Log.info("[START]excPath", Sys.getCwd());
+		Log.info("[START]listener", ip + ":" + port);
 		EntryPoint.addThread(onServerRuning);
 	}
 
@@ -73,9 +85,14 @@ class SocketServer {
 					onConnectClient(socket);
 				}
 			} catch (e:Exception) {
+				Log.error("Socket don't accept!");
 				Log.exception(e);
+				// 重开一个？
+				break;
 			}
 		}
+		trace("尝试重启!");
+		Thread.runWithEventLoop(this.start);
 	}
 
 	/**

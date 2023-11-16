@@ -1,5 +1,8 @@
 package rpc;
 
+import sys.thread.Thread;
+import utils.Log;
+import haxe.Exception;
 import haxe.Rest;
 import haxe.Json;
 import haxe.io.Bytes;
@@ -38,22 +41,26 @@ class RPCClient extends RPCRequest {
 	 * @return Dynamic
 	 */
 	public function callMethod(func:String, ...args:Dynamic):Dynamic {
-		var list = args.toArray();
-		var output = client.output;
-		// 方法名
-		this.writeString(func);
-		// 参数数量
-		var array = args.toArray();
-		output.writeInt16(array.length);
-		// 参数传递
-		for (value in array) {
-			writeArgsValue(value);
-		}
-		// 读取返回值
-		var input = client.input;
-		while (true) {
-			var type:RPCType = input.readInt8();
-			return readArgsValue(type);
+		try {
+			var output = client.output;
+			// 方法名
+			this.writeString(func);
+			// 参数数量
+			var array = args.toArray();
+			output.writeInt16(array.length);
+			// 参数传递
+			for (value in array) {
+				writeArgsValue(value);
+			}
+			// 读取返回值
+			var input = client.input;
+			while (true) {
+				var type:RPCType = input.readInt8();
+				return readArgsValue(type);
+			}
+		} catch (e:Exception) {
+			return null;
+			Log.exception(e);
 		}
 	}
 }
