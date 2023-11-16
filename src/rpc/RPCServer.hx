@@ -24,7 +24,6 @@ class RPCServer extends SocketServer implements IRPCProtocol {
 			try {
 				var rpc = new RPCRequest(client, this);
 				rpc.close();
-				trace("rpc线程结束了");
 			} catch (e:Exception) {
 				Log.exception(e);
 			}
