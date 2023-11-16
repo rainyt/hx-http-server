@@ -28,7 +28,7 @@ class ThreadPool {
 	 * 定义一个线程池
 	 * @param maxThread 
 	 */
-	public function new(maxThread:Int = 100) {
+	public function new(maxThread:Int = 10) {
 		for (i in 0...maxThread) {
 			Thread.create(onWork);
 		}
