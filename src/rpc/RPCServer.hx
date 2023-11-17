@@ -1,10 +1,8 @@
 package rpc;
 
 import thread.Threads;
-import utils.ThreadPool;
 import utils.Log;
 import haxe.Exception;
-import sys.thread.Thread;
 import sys.net.Socket;
 import net.SocketServer;
 

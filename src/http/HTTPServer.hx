@@ -1,7 +1,6 @@
 package http;
 
 import thread.Threads;
-import utils.ThreadPool;
 import net.SocketServer;
 import utils.Log;
 import haxe.Exception;

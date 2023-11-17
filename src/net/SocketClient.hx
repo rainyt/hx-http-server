@@ -31,9 +31,7 @@ class SocketClient {
 	public function onWork():Void {}
 
 	public function close():Void {
-		// try {
-		// client.close();
-		// } catch (e:Exception) {}
+		client.close();
 		server = null;
 		client = null;
 	}

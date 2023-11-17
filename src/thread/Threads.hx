@@ -1,6 +1,6 @@
 package thread;
 
-import utils.ThreadPool;
+import sys.thread.FixedThreadPool;
 
 /**
  * 线程池处理
@@ -9,9 +9,12 @@ class Threads {
 	/**
 	 * 默认的最大线程，请在一开始就定义好最大的线程，以便程序创建时使用适当的线程数量。
 	 */
-	public static var maxThreads = 10;
+	public static var maxThreads = 100;
 
-	private static var __pool:ThreadPool;
+	/**
+	 * 固定的线程池
+	 */
+	private static var __pool:FixedThreadPool;
 
 	/**
 	 * 创建线程
@@ -19,8 +22,8 @@ class Threads {
 	 */
 	public static function create(cb:Void->Void):Void {
 		if (__pool == null) {
-			__pool = new ThreadPool(maxThreads);
+			__pool = new FixedThreadPool(maxThreads);
 		}
-		__pool.create(cb);
+		__pool.run(cb);
 	}
 }

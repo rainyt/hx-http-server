@@ -39,7 +39,7 @@ class SocketServer {
 	/**
 	 * 最大链接数
 	 */
-	public var maxThreadCounts = 1024;
+	public var maxThreadCounts = 4096;
 
 	private var __server:Socket;
 
@@ -72,27 +72,36 @@ class SocketServer {
 		}
 		Log.info("[START]excPath", Sys.getCwd());
 		Log.info("[START]listener", ip + ":" + port);
-		EntryPoint.addThread(onServerRuning);
+		// EntryPoint.addThread(onServerRuning);
+		Thread.create(onServerRuning);
 	}
 
 	public function onConnectClient(client:Socket):Void {}
 
 	public function onServerRuning():Void {
+		var errorTimes = 0;
 		while (__runing) {
 			try {
 				var socket = __server.accept();
 				if (socket != null) {
-					onConnectClient(socket);
+					try {
+						errorTimes = 0;
+						onConnectClient(socket);
+					} catch (e:Exception) {
+						Log.error("onConnectClient Excepition.");
+						Log.exception(e);
+					}
 				}
 			} catch (e:Exception) {
-				Log.error("Socket don't accept!");
+				errorTimes++;
 				Log.exception(e);
-				// 重开一个？
-				break;
+				if (errorTimes >= 10) {
+					Log.error("Socket don't accept!");
+					break;
+				}
 			}
 		}
-		trace("尝试重启!");
-		Thread.runWithEventLoop(this.start);
+		throw("Server closed by " + this.ip + ":" + this.port);
 	}
 
 	/**
