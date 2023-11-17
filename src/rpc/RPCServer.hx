@@ -1,5 +1,6 @@
 package rpc;
 
+import thread.Threads;
 import utils.ThreadPool;
 import utils.Log;
 import haxe.Exception;
@@ -16,11 +17,9 @@ class RPCServer extends SocketServer implements IRPCProtocol {
 	 */
 	public var protocol:RPC;
 
-	public var threadPool:ThreadPool = new ThreadPool();
-
 	override function onConnectClient(client:Socket) {
 		super.onConnectClient(client);
-		threadPool.create(() -> {
+		Threads.create(() -> {
 			try {
 				var rpc = new RPCRequest(client, this);
 				rpc.close();

@@ -1,0 +1,26 @@
+package thread;
+
+import utils.ThreadPool;
+
+/**
+ * 线程池处理
+ */
+class Threads {
+	/**
+	 * 默认的最大线程，请在一开始就定义好最大的线程，以便程序创建时使用适当的线程数量。
+	 */
+	public static var maxThreads = 10;
+
+	private static var __pool:ThreadPool;
+
+	/**
+	 * 创建线程
+	 * @param cb 
+	 */
+	public static function create(cb:Void->Void):Void {
+		if (__pool == null) {
+			__pool = new ThreadPool(maxThreads);
+		}
+		__pool.create(cb);
+	}
+}

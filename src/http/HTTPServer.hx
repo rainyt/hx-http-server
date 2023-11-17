@@ -1,5 +1,6 @@
 package http;
 
+import thread.Threads;
 import utils.ThreadPool;
 import net.SocketServer;
 import utils.Log;
@@ -45,11 +46,6 @@ class HTTPServer extends SocketServer {
 	dynamic public function onResponseAfter(http:HTTPRequest):Void {}
 
 	/**
-	 * 线程池
-	 */
-	public var threadPool:ThreadPool = new ThreadPool();
-
-	/**
 	 * 创建线程管理
 	 * @param client 
 	 */
@@ -59,7 +55,7 @@ class HTTPServer extends SocketServer {
 			Log.info("connect head:", head);
 		}
 		if (head.indexOf("GET") == 0 || head.indexOf("POST") == 0 || head.indexOf("OPTIONS") == 0) {
-			threadPool.create(() -> {
+			Threads.create(() -> {
 				var http = new HTTPRequest(client, this, head);
 				try {
 					route.callRoute(http.path, http);
