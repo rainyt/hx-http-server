@@ -1,5 +1,6 @@
 package thread;
 
+import sys.thread.Thread;
 import sys.thread.FixedThreadPool;
 
 /**
@@ -21,9 +22,10 @@ class Threads {
 	 * @param cb 
 	 */
 	public static function create(cb:Void->Void):Void {
-		if (__pool == null) {
-			__pool = new FixedThreadPool(maxThreads);
-		}
-		__pool.run(cb);
+		// if (__pool == null) {
+		// __pool = new FixedThreadPool(maxThreads);
+		// }
+		// __pool.run(cb);
+		Thread.create(cb);
 	}
 }

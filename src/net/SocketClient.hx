@@ -25,13 +25,15 @@ class SocketClient {
 			this.onWork();
 		} catch (e:Exception) {
 			Log.exception(e);
+			this.close();
 		}
 	}
 
 	public function onWork():Void {}
 
 	public function close():Void {
-		client.close();
+		if (client != null)
+			client.close();
 		server = null;
 		client = null;
 	}

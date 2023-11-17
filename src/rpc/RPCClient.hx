@@ -1,5 +1,7 @@
 package rpc;
 
+import haxe.EntryPoint;
+import sys.thread.Mutex;
 import sys.thread.Thread;
 import utils.Log;
 import haxe.Exception;
@@ -13,6 +15,10 @@ import sys.net.Socket;
  * RPC客户端
  */
 class RPCClient extends RPCRequest {
+	private var __runing:Bool = true;
+
+	private var __mutex:Mutex = new Mutex();
+
 	/**
 	 * 创建一个RPC链接
 	 * @param ip 
@@ -29,10 +35,53 @@ class RPCClient extends RPCRequest {
 		super(client, null);
 	}
 
+	private var __call:Array<RPCCall> = [];
+
+	private var __returnType:Null<RPCType> = null;
+
+	private var __returnValue:Dynamic = null;
+
 	/**
 	 * 客户端不需要读取
 	 */
-	override function onWork() {}
+	override function onWork() {
+		EntryPoint.addThread(__onThraedWork);
+	}
+
+	private function __onThraedWork():Void {
+		var output = client.output;
+		var input = client.input;
+		while (__runing) {
+			var rpcCall = getCall();
+			if (rpcCall != null) {
+				trace("开始写入：", rpcCall.methodName, rpcCall.args);
+				// 方法名
+				this.writeString(rpcCall.methodName);
+				// 参数数量
+				var array = rpcCall.args;
+				output.writeInt16(array.length);
+				// 参数传递
+				for (value in array) {
+					writeArgsValue(value);
+				}
+				// 读取返回值
+				__mutex.acquire();
+				__returnType = input.readInt8();
+				__returnValue = readArgsValue(__returnType);
+				trace("读取到返回值：", __returnType, __returnValue);
+				__mutex.release();
+			} else {
+				Sys.sleep(0.01);
+			}
+		}
+	}
+
+	private function getCall():RPCCall {
+		__mutex.acquire();
+		var r = __call.shift();
+		__mutex.release();
+		return r;
+	}
 
 	/**
 	 * 方法调用
@@ -41,26 +90,31 @@ class RPCClient extends RPCRequest {
 	 * @return Dynamic
 	 */
 	public function callMethod(func:String, ...args:Dynamic):Dynamic {
-		try {
-			var output = client.output;
-			// 方法名
-			this.writeString(func);
-			// 参数数量
-			var array = args.toArray();
-			output.writeInt16(array.length);
-			// 参数传递
-			for (value in array) {
-				writeArgsValue(value);
-			}
-			// 读取返回值
-			var input = client.input;
-			while (true) {
-				var type:RPCType = input.readInt8();
-				return readArgsValue(type);
-			}
-		} catch (e:Exception) {
-			return null;
-			Log.exception(e);
+		__mutex.acquire();
+		__returnType = null;
+		__returnValue = null;
+		__call.push({
+			methodName: func,
+			args: args.toArray()
+		});
+		trace("调用", func, args.toArray());
+		__mutex.release();
+		while (__returnType == null) {
+			Sys.sleep(0.001);
 		}
+		return __returnValue;
 	}
+
+	override function close() {
+		this.__runing = false;
+		super.close();
+	}
+}
+
+/**
+ * 单次方法调用
+ */
+typedef RPCCall = {
+	methodName:String,
+	args:Array<Dynamic>
 }

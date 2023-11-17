@@ -74,8 +74,7 @@ class RPCRequest extends SocketClient {
 					} else {
 						client.output.writeInt8(RPCType.VIOD);
 					}
-					client.close();
-					break;
+					state = METHOD;
 			}
 		}
 	}
