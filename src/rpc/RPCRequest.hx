@@ -44,6 +44,13 @@ class RPCRequest extends SocketClient {
 					counts = 0;
 					methodName = readString();
 					state = ARGS_COUNTS;
+					// \n为中断符号
+					if (methodName == "\n") {
+						// 中断
+						trace("主动断开了！");
+						this.close();
+						break;
+					}
 				case ARGS_COUNTS:
 					counts = input.readInt16();
 					if (counts == 0) {

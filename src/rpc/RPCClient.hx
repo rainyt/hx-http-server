@@ -54,7 +54,6 @@ class RPCClient extends RPCRequest {
 		while (__runing) {
 			var rpcCall = getCall();
 			if (rpcCall != null) {
-				trace("开始写入：", rpcCall.methodName, rpcCall.args);
 				// 方法名
 				this.writeString(rpcCall.methodName);
 				// 参数数量
@@ -68,12 +67,12 @@ class RPCClient extends RPCRequest {
 				__mutex.acquire();
 				__returnType = input.readInt8();
 				__returnValue = readArgsValue(__returnType);
-				trace("读取到返回值：", __returnType, __returnValue);
 				__mutex.release();
 			} else {
 				Sys.sleep(0.01);
 			}
 		}
+		Log.error("RPC connecting close.");
 	}
 
 	private function getCall():RPCCall {
@@ -99,14 +98,21 @@ class RPCClient extends RPCRequest {
 		});
 		trace("调用", func, args.toArray());
 		__mutex.release();
-		while (__returnType == null) {
+		while (true) {
+			__mutex.acquire();
+			if (__returnType == null) {
+				__mutex.release();
+				continue;
+			}
 			Sys.sleep(0.001);
+			__mutex.release();
+			return __returnValue;
 		}
-		return __returnValue;
 	}
 
 	override function close() {
 		this.__runing = false;
+		this.writeString("\n");
 		super.close();
 	}
 }

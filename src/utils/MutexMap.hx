@@ -20,7 +20,10 @@ class MutexMap<T2> {
 	}
 
 	public function get(id:String):T2 {
-		return __maps.get(id);
+		__mutex.acquire();
+		var v = __maps.get(id);
+		__mutex.release();
+		return v;
 	}
 
 	public function set(id:String, v:T2):Void {
