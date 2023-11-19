@@ -7,7 +7,7 @@ import http.HTTPServer;
 class Main {
 	static function main() {
 		// 启动一个服务器
-		Log.info("启动服务器");
+		Log.info("Server start.");
 		var ip:String = "0.0.0.0";
 		var port = 5555;
 		var http = new HTTPServer(ip, port, true);
@@ -19,15 +19,15 @@ class Main {
 			if (FileSystem.exists(path)) {
 				http.sendFile(http.path);
 			} else
-				http.send("hello world! File is not found: " + http.path);
+				http.send("Hello world! File is not found: " + http.path);
 		}
 		// 路由功能测试
 		http.route.addRoute("/", (http) -> {
-			Log.warring("访问到了/路由", http.path);
+			Log.warring("Hi, '/' route", http.path);
 			return true;
 		});
 		http.route.addRoute("/index.html", (http) -> {
-			Log.warring("访问到了/index.html路由", http.path);
+			Log.warring("Hi, '/index.html' route", http.path);
 			return true;
 		});
 		// 自定义路由功能
