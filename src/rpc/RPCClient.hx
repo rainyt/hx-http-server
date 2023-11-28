@@ -96,7 +96,6 @@ class RPCClient extends RPCRequest {
 			methodName: func,
 			args: args.toArray()
 		});
-		trace("调用", func, args.toArray());
 		__mutex.release();
 		while (true) {
 			__mutex.acquire();

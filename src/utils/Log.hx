@@ -8,7 +8,7 @@ class Log {
 	}
 
 	public static function debug(...data:String):Void {
-		Sys.println('\u001b[34m[INFO] ${data.toArray().join(", ")}');
+		Sys.println('\u001b[34m[DEBUG] ${data.toArray().join(", ")}');
 	}
 
 	public static function error(...data:String):Void {
