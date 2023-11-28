@@ -94,7 +94,7 @@ class HTTPParam {
 	 * @return String
 	 */
 	public function header(key:String):String {
-		return __header.get(key);
+		return __header.get(key.toLowerCase());
 	}
 
 	/**
@@ -141,6 +141,6 @@ class HTTPParam {
 	 * @param data 
 	 */
 	public function pushHeader(key:String, value:String):Void {
-		__header.set(key, value);
+		__header.set(key.toLowerCase(), value);
 	}
 }
