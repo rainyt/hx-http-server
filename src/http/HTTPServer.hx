@@ -49,12 +49,12 @@ class HTTPServer extends SocketServer {
 	 * @param client 
 	 */
 	override public function onConnectClient(client:Socket):Void {
-		var head:String = client.input.readLine();
-		if (this.log) {
-			Log.info("connect head:", head);
-		}
-		if (head.indexOf("GET") == 0 || head.indexOf("POST") == 0 || head.indexOf("OPTIONS") == 0) {
-			Threads.create(() -> {
+		Threads.create(() -> {
+			var head:String = client.input.readLine();
+			if (this.log) {
+				Log.info("connect head:", head);
+			}
+			if (head.indexOf("GET") == 0 || head.indexOf("POST") == 0 || head.indexOf("OPTIONS") == 0) {
 				var http = new HTTPRequest(client, this, head);
 				try {
 					route.callRoute(http.path, http);
@@ -71,9 +71,9 @@ class HTTPServer extends SocketServer {
 					@:privateAccess http.__send();
 				}
 				http.close();
-			});
-		} else {
-			client.close();
-		}
+			} else {
+				client.close();
+			}
+		});
 	}
 }

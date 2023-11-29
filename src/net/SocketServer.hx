@@ -85,6 +85,7 @@ class SocketServer {
 				var socket = __server.accept();
 				if (socket != null) {
 					try {
+						Log.info("onConnectClient...");
 						errorTimes = 0;
 						onConnectClient(socket);
 					} catch (e:Exception) {
