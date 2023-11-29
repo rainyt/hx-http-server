@@ -39,7 +39,7 @@ class SocketServer {
 	/**
 	 * 最大链接数
 	 */
-	public var maxThreadCounts = 4096;
+	public var maxThreadCounts = 10;
 
 	private var __server:Socket;
 
@@ -65,6 +65,7 @@ class SocketServer {
 			__server = new Socket();
 		var host = new Host(ip);
 		try {
+			__server.setBlocking(false);
 			__server.bind(host, port);
 			__server.listen(maxThreadCounts);
 		} catch (e:Exception) {
@@ -79,14 +80,12 @@ class SocketServer {
 	public function onConnectClient(client:Socket):Void {}
 
 	public function onServerRuning():Void {
-		var errorTimes = 0;
 		while (__runing) {
 			try {
 				var socket = __server.accept();
 				if (socket != null) {
 					try {
 						Log.info("onConnectClient...");
-						errorTimes = 0;
 						onConnectClient(socket);
 					} catch (e:Exception) {
 						Log.error("onConnectClient Excepition.");
@@ -94,12 +93,8 @@ class SocketServer {
 					}
 				}
 			} catch (e:Exception) {
-				errorTimes++;
-				Log.exception(e);
-				if (errorTimes >= 10) {
-					Log.error("Socket don't accept!");
-					break;
-				}
+				if (e.message != "Blocking")
+					Log.exception(e);
 			}
 		}
 		throw("Server closed by " + this.ip + ":" + this.port);

@@ -127,9 +127,7 @@ class HTTPRequest extends SocketClient {
 		}
 		if (contentLength > 0) {
 			postData = Bytes.alloc(contentLength);
-			// input.readBytes(postData, 0, contentLength);
 			input.readFullBytes(postData, 0, contentLength);
-			Log.error("读取到的长度：", "" + postData.length, "实际所需：", "" + contentLength);
 		}
 	}
 

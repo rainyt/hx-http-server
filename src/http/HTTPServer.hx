@@ -50,28 +50,33 @@ class HTTPServer extends SocketServer {
 	 */
 	override public function onConnectClient(client:Socket):Void {
 		Threads.create(() -> {
-			var head:String = client.input.readLine();
-			if (this.log) {
-				Log.info("connect head:", head);
-			}
-			if (head.indexOf("GET") == 0 || head.indexOf("POST") == 0 || head.indexOf("OPTIONS") == 0) {
-				var http = new HTTPRequest(client, this, head);
-				try {
-					route.callRoute(http.path, http);
-					onConnectRequest(http);
-					// 发送路由信息
-					onResponseAfter(http);
-					@:privateAccess http.__send();
-				} catch (e:Exception) {
-					if (http != null)
-						Log.error(http.toMessageString());
-					Log.exception(e);
-					http.send(e.message, SERVICE_UNAVAILABLE);
-					onResponseAfter(http);
-					@:privateAccess http.__send();
+			try {
+				var head:String = client.input.readLine();
+				if (this.log) {
+					Log.info("connect head:", head);
 				}
-				http.close();
-			} else {
+				if (head.indexOf("GET") == 0 || head.indexOf("POST") == 0 || head.indexOf("OPTIONS") == 0) {
+					var http = new HTTPRequest(client, this, head);
+					try {
+						route.callRoute(http.path, http);
+						onConnectRequest(http);
+						// 发送路由信息
+						onResponseAfter(http);
+						@:privateAccess http.__send();
+					} catch (e:Exception) {
+						if (http != null)
+							Log.error(http.toMessageString());
+						Log.exception(e);
+						http.send(e.message, SERVICE_UNAVAILABLE);
+						onResponseAfter(http);
+						@:privateAccess http.__send();
+					}
+					http.close();
+				} else {
+					client.close();
+				}
+			} catch (e:Exception) {
+				Log.error("HTTPServer", e.message);
 				client.close();
 			}
 		});
