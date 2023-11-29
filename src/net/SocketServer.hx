@@ -72,8 +72,8 @@ class SocketServer {
 		}
 		Log.info("[START]excPath", Sys.getCwd());
 		Log.info("[START]listener", ip + ":" + port);
-		// EntryPoint.addThread(onServerRuning);
-		Thread.create(onServerRuning);
+		EntryPoint.addThread(onServerRuning);
+		// Thread.create(onServerRuning);
 	}
 
 	public function onConnectClient(client:Socket):Void {}
