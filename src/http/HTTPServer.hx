@@ -1,5 +1,6 @@
 package http;
 
+import haxe.Json;
 import thread.Threads;
 import net.SocketServer;
 import utils.Log;
@@ -50,8 +51,9 @@ class HTTPServer extends SocketServer {
 	 */
 	override public function onConnectClient(client:Socket):Void {
 		Threads.create(() -> {
+			var head:String = null;
 			try {
-				var head:String = client.input.readLine();
+				head = client.input.readLine();
 				if (this.log) {
 					Log.info("connect head:", head);
 				}
@@ -76,7 +78,7 @@ class HTTPServer extends SocketServer {
 					client.close();
 				}
 			} catch (e:Exception) {
-				Log.error("HTTPServer", e.message);
+				Log.error("HTTPServer", e.message, Json.stringify(client.host()));
 				client.close();
 			}
 		});
