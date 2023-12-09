@@ -62,6 +62,8 @@ class HTTPResponse {
 		bytesOutput.writeString("\r\n");
 		bytesOutput.writeString("Access-Control-Allow-Headers: *");
 		bytesOutput.writeString("\r\n");
+		bytesOutput.writeString("Server: hxcpp");
+		bytesOutput.writeString("\r\n");
 		bytesOutput.writeString("\r\n");
 		if (__data != null) {
 			bytesOutput.writeBytes(__data, 0, __data.length);

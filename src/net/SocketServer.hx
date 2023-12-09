@@ -1,6 +1,5 @@
 package net;
 
-import sys.thread.Thread;
 import haxe.Exception;
 import sys.net.Host;
 import sys.net.Socket;

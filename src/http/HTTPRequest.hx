@@ -1,5 +1,6 @@
 package http;
 
+import utils.MimeTools;
 import net.SocketClient;
 import haxe.Exception;
 import haxe.Json;
@@ -87,6 +88,7 @@ class HTTPRequest extends SocketClient {
 			method = headerMessage[0];
 			path = headerMessage[1];
 			httpVersion = headerMessage[2];
+			mime = MimeTools.getMimeType(path);
 		}
 		super(socket, server);
 	}
@@ -153,6 +155,7 @@ class HTTPRequest extends SocketClient {
 	@:noCompletion private function __send():Void {
 		var bytes = response.getResponseData();
 		if (server.log) {
+			Log.warring("response", bytes.toString());
 			Log.info(this.path, "Send Length:" + bytes.length);
 		}
 		this.client.output.writeBytes(bytes, 0, bytes.length);
@@ -164,6 +167,7 @@ class HTTPRequest extends SocketClient {
 	 * @param code 
 	 */
 	public function sendFile(filePath:String, code:HTTPRequestCode = OK):Void {
+		mime = MimeTools.getMimeType(filePath);
 		var path = Path.join([cast(server, HTTPServer).webDir, filePath]);
 		if (FileSystem.exists(path)) {
 			if (server.log)
@@ -173,7 +177,7 @@ class HTTPRequest extends SocketClient {
 			response.data = File.getBytes(path);
 		} else {
 			if (server.log)
-				Log.info("not found", path);
+				Log.error("not found", path);
 			response.code = NOT_FOUND;
 			response.mime = mime;
 			response.data = "Not found " + filePath;
