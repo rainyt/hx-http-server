@@ -86,7 +86,7 @@ class HTTPRequest extends SocketClient {
 		if (head != null) {
 			var headerMessage = head.split(" ");
 			method = headerMessage[0];
-			path = headerMessage[1];
+			path = StringTools.urlDecode(headerMessage[1]);
 			httpVersion = headerMessage[2];
 			mime = MimeTools.getMimeType(path);
 		}
@@ -167,6 +167,7 @@ class HTTPRequest extends SocketClient {
 	 * @param code 
 	 */
 	public function sendFile(filePath:String, code:HTTPRequestCode = OK):Void {
+		// URL编码解码处理
 		mime = MimeTools.getMimeType(filePath);
 		var path = Path.join([cast(server, HTTPServer).webDir, filePath]);
 		if (FileSystem.exists(path)) {
