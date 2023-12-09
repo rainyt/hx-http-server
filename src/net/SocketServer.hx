@@ -31,9 +31,9 @@ class SocketServer {
 	public var port:Int;
 
 	/**
-	 * 是否启动SSL
+	 * SSL配置，如果需要SSL时，则需要提供对应的参数
 	 */
-	public var ssl:Bool = false;
+	public var ssl:SSLOption;
 
 	/**
 	 * 最大链接数
@@ -55,11 +55,11 @@ class SocketServer {
 	public function onInit():Void {}
 
 	public function start():Void {
-		if (ssl) {
+		if (ssl != null) {
 			var sslScoket = new sys.ssl.Socket();
 			__server = sslScoket;
-			// TODO 这里需要设置证书
-			// sslScoket.setCertificate()
+			// 这里需要设置证书
+			sslScoket.setCertificate(ssl.certificate, ssl.key);
 		} else
 			__server = new Socket();
 		var host = new Host(ip);
