@@ -1,5 +1,6 @@
 package net;
 
+import http.IRuning;
 import haxe.Exception;
 import sys.net.Host;
 import sys.net.Socket;
@@ -9,7 +10,7 @@ import haxe.EntryPoint;
 /**
  * TCP服务器
  */
-class SocketServer {
+class SocketServer implements IRuning {
 	/**
 	 * 运行状态
 	 */
@@ -81,6 +82,7 @@ class SocketServer {
 	public function onServerRuning():Void {
 		while (__runing) {
 			try {
+				this.onRuning();
 				var socket = __server.accept();
 				if (socket != null) {
 					try {
@@ -98,6 +100,8 @@ class SocketServer {
 		}
 		throw("Server closed by " + this.ip + ":" + this.port);
 	}
+
+	public function onRuning() {}
 
 	/**
 	 * 停止当前服务器

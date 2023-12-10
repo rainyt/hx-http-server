@@ -1,6 +1,6 @@
 package http.route;
 
-interface IRoute {
+interface IRoute extends IRuning{
 	/**
 	 * 当前的路由ID
 	 */

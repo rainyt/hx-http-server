@@ -19,6 +19,14 @@ class MutexMap<T2> {
 		__maps = new Map();
 	}
 
+	public function acquireMutex():Void {
+		__mutex.acquire();
+	}
+
+	public function relaseMutex():Void {
+		__mutex.release();
+	}
+
 	public function get(id:String):T2 {
 		__mutex.acquire();
 		var v = __maps.get(id);

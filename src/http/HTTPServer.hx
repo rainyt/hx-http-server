@@ -83,4 +83,9 @@ class HTTPServer extends SocketServer {
 			}
 		});
 	}
+
+	override function onRuning() {
+		super.onRuning();
+		this.route.onRuning();
+	}
 }

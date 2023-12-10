@@ -8,7 +8,7 @@ import http.route.IRoute;
 /**
  * 路由管理器
  */
-class HTTPRouteManager {
+class HTTPRouteManager implements IRuning {
 	/**
 	 * 路由映射
 	 */
@@ -87,6 +87,14 @@ class HTTPRouteManager {
 						currentRoute += "/";
 					}
 				}
+		}
+	}
+
+	public function onRuning() {
+		for (array in this.routes) {
+			for (route in array) {
+				route.onRuning();
+			}
 		}
 	}
 

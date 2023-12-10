@@ -5,7 +5,7 @@ import http.route.IRoute;
 /**
  * 请求路由功能
  */
-class HTTPRoute implements IRoute {
+class HTTPRoute implements IRoute implements IRuning {
 	/**
 	 * 当前的路由ID
 	 */
@@ -57,4 +57,6 @@ class HTTPRoute implements IRoute {
 	public function onConnectClient(client:HTTPRequest):Bool {
 		return onConnectClientCallBack(client);
 	}
+
+	public function onRuning():Void {};
 }

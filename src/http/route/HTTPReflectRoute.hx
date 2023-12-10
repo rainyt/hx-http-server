@@ -30,7 +30,7 @@ class HTTPReflectRoute extends HTTPRoute {
 	/**
 	 * 反射的路由对象
 	 */
-	public var reflectObject:Dynamic;
+	public var reflectObject:HTTPReflectCustomObject;
 
 	/**
 	 * 已反射好的方法列表
@@ -127,6 +127,11 @@ class HTTPReflectRoute extends HTTPRoute {
 			client.send("Not found " + client.path, NOT_FOUND);
 		}
 		return true;
+	}
+
+	override function onRuning() {
+		super.onRuning();
+		this.reflectObject.onRuning();
 	}
 }
 
