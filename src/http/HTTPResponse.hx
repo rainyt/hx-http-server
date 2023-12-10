@@ -1,5 +1,6 @@
 package http;
 
+import utils.Log;
 import haxe.io.BytesOutput;
 import haxe.io.Bytes;
 
@@ -56,7 +57,7 @@ class HTTPResponse {
 		bytesOutput.writeString("\r\n");
 		bytesOutput.writeString("Content-Length: " + (__data == null ? 0 : __data.length));
 		bytesOutput.writeString("\r\n");
-		bytesOutput.writeString("Content-Type: " + mime);
+		bytesOutput.writeString("Content-Type: " + mime + "; charset=utf-8");
 		bytesOutput.writeString("\r\n");
 		bytesOutput.writeString("Access-Control-Allow-Origin: *");
 		bytesOutput.writeString("\r\n");
