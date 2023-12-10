@@ -155,10 +155,9 @@ class HTTPRequest extends SocketClient {
 	@:noCompletion private function __send():Void {
 		var bytes = response.getResponseData();
 		if (server.log) {
-			// Log.warring("response", bytes.toString());
 			Log.info(this.path, "Send Length:" + bytes.length);
 		}
-		this.client.output.writeBytes(bytes, 0, bytes.length);
+		this.client.output.writeFullBytes(bytes, 0, bytes.length);
 	}
 
 	/**
