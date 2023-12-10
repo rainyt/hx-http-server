@@ -1,5 +1,6 @@
 package http;
 
+import sys.io.File;
 import haxe.Json;
 import thread.Threads;
 import net.SocketServer;
@@ -53,6 +54,10 @@ class HTTPServer extends SocketServer {
 		Threads.create(() -> {
 			var head:String = null;
 			try {
+				if (this.ssl != null) {
+					var sslSocket:sys.ssl.Socket = cast client;
+					sslSocket.handshake();
+				}
 				head = client.input.readLine();
 				if (this.log) {
 					Log.info("connect head:", head);
@@ -78,7 +83,7 @@ class HTTPServer extends SocketServer {
 					client.close();
 				}
 			} catch (e:Exception) {
-				Log.error("HTTPServer", e.message, Json.stringify(client.host()));
+				Log.error("HTTPServer", e.message);
 				client.close();
 			}
 		});

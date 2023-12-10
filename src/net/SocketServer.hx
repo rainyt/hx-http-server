@@ -39,7 +39,7 @@ class SocketServer implements IRuning {
 	/**
 	 * 最大链接数
 	 */
-	public var maxThreadCounts = 10;
+	public var maxThreadCounts = 256;
 
 	private var __server:Socket;
 
@@ -57,10 +57,11 @@ class SocketServer implements IRuning {
 
 	public function start():Void {
 		if (ssl != null) {
-			var sslScoket = new sys.ssl.Socket();
-			__server = sslScoket;
-			// 这里需要设置证书
-			sslScoket.setCertificate(ssl.certificate, ssl.key);
+			var sslSocket = new sys.ssl.Socket();
+			sslSocket.setCA(ssl.certificate);
+			sslSocket.setCertificate(ssl.certificate, ssl.key);
+			sslSocket.verifyCert = false;
+			__server = sslSocket;
 		} else
 			__server = new Socket();
 		var host = new Host(ip);
