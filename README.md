@@ -31,8 +31,8 @@ http.route.addRoute("/", (http) -> {
 ### 对象反射路由
 通过一个对象，由`http.macro.ReflectRouteMacro`自动生成反射对象类，使它每个公开的方法都能够自动转换成路由方法，并遵循参数的可选不可选、参数名等。
 同时，可以直接继承`http.route.HTTPReflectCustomObject`直接实现公开方法，请参考`ReflectCustomObject`。
-### HTTPS（未完成）
-它需要一个证书测试，我还没有进行这项测试。
+### HTTPS
+已支持HTTPS，使用`443`端口，通过`sslOption`参数配置；
 ### GET数据
 通过`client.param.get`方法获得`?`后面的参数。
 ### POST数据
