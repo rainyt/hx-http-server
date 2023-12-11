@@ -52,35 +52,27 @@ class HTTPServer extends SocketServer {
 	 */
 	override public function onConnectClient(client:Socket):Void {
 		Threads.create(() -> {
-			var head:String = null;
+			var client:Socket = Thread.readMessage(true);
+			var uid = Std.random(99999);
+			trace("Threads start", uid);
 			try {
-				head = client.input.readLine();
-				if (this.log) {
-					Log.info("connect head:", head);
-				}
+				var head = client.input.readLine();
 				if (head.indexOf("GET") == 0 || head.indexOf("POST") == 0 || head.indexOf("OPTIONS") == 0) {
 					var http = new HTTPRequest(client, this, head);
-					try {
-						route.callRoute(http.path, http);
-						onConnectRequest(http);
-						// 发送路由信息
-						onResponseAfter(http);
-						@:privateAccess http.__send();
-						http.close();
-					} catch (e:Exception) {
-						Log.exception("HTTPServer.exception", e);
-						http.send(e.message, SERVICE_UNAVAILABLE);
-						onResponseAfter(http);
-						@:privateAccess http.__send();
-					}
+					route.callRoute(http.path, http);
+					onConnectRequest(http);
+					// 发送路由信息
+					onResponseAfter(http);
+					@:privateAccess http.__send();
+					http.close();
 				} else {
 					client.close();
 				}
+				trace("Threads over", uid);
 			} catch (e:Exception) {
-				Log.error("HTTPServer", e.message);
-				client.close();
+				Log.exception("HTTPServer.exception" + uid, e);
 			}
-		});
+		}).sendMessage(client);
 	}
 
 	override function onRuning() {

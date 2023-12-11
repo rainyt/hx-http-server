@@ -12,9 +12,7 @@ class Threads {
 	 * 创建线程
 	 * @param cb 
 	 */
-	public static function create(cb:Void->Void):Void {
-		// EntryPoint.addThread(cb);
-		Log.info("Thread Counts:" + EntryPoint.threadCount);
-		EntryPoint.addThread(cb);
+	public static function create(cb:Void->Void):Thread {
+		return Thread.create(cb);
 	}
 }

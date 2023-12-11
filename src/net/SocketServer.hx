@@ -43,6 +43,8 @@ class SocketServer implements IRuning {
 
 	private var __server:Socket;
 
+	public var blocking:Bool = true;
+
 	public function new(ip:String, port:Int, log:Bool = false) {
 		this.log = log;
 		this.ip = ip;
@@ -66,7 +68,7 @@ class SocketServer implements IRuning {
 			__server = new Socket();
 		var host = new Host(ip);
 		try {
-			__server.setBlocking(false);
+			__server.setBlocking(blocking);
 			__server.bind(host, port);
 			__server.listen(maxThreadCounts);
 		} catch (e:Exception) {
@@ -86,20 +88,14 @@ class SocketServer implements IRuning {
 				this.onRuning();
 				var socket = __server.accept();
 				if (socket != null) {
-					try {
-						Log.info("onConnectClient...");
-						onConnectClient(socket);
-					} catch (e:Exception) {
-						Log.error("onConnectClient Excepition.");
-						Log.exception("SocketServer.onConnectClient", e);
-					}
+					onConnectClient(socket);
 				}
 			} catch (e:Exception) {
 				if (e.message != "Blocking")
 					Log.exception("SocketServer.onRuning", e);
 			}
 		}
-		throw("Server closed by " + this.ip + ":" + this.port);
+		Log.warring("Server closed by " + this.ip + ":" + this.port);
 	}
 
 	public function onRuning() {}

@@ -111,7 +111,7 @@ class HTTPRequest extends SocketClient {
 			content = input.readLine();
 			// if (server.log)
 			// Log.info(content);
-			if (content == "") {
+			if (content == "" || content == null) {
 				break;
 			}
 			var datas = content.split(" ");
@@ -176,7 +176,10 @@ class HTTPRequest extends SocketClient {
 				Log.info("sendFile", path);
 			response.code = code;
 			response.mime = mime;
-			response.data = File.getBytes(path);
+			var read = File.read(path);
+			var data = read.readAll();
+			// response.data = File.getBytes(path);
+			response.data = data;
 		} else {
 			if (server.log)
 				Log.error("not found", path);
