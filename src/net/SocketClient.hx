@@ -25,7 +25,7 @@ class SocketClient {
 			this.onWork();
 		} catch (e:Exception) {
 			Log.error("SocketClient Error.");
-			Log.exception(e);
+			Log.exception("SocketClient.onWork", e);
 			this.close();
 		}
 	}

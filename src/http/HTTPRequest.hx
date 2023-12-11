@@ -153,6 +153,8 @@ class HTTPRequest extends SocketClient {
 	 * 最终结算并发送
 	 */
 	@:noCompletion private function __send():Void {
+		if (client == null)
+			return;
 		var bytes = response.getResponseData();
 		if (server.log) {
 			Log.info(this.path, "Send Length:" + bytes.length);

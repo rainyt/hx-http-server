@@ -91,12 +91,12 @@ class SocketServer implements IRuning {
 						onConnectClient(socket);
 					} catch (e:Exception) {
 						Log.error("onConnectClient Excepition.");
-						Log.exception(e);
+						Log.exception("SocketServer.onConnectClient", e);
 					}
 				}
 			} catch (e:Exception) {
 				if (e.message != "Blocking")
-					Log.exception(e);
+					Log.exception("SocketServer.onRuning", e);
 			}
 		}
 		throw("Server closed by " + this.ip + ":" + this.port);

@@ -66,15 +66,13 @@ class HTTPServer extends SocketServer {
 						// 发送路由信息
 						onResponseAfter(http);
 						@:privateAccess http.__send();
+						http.close();
 					} catch (e:Exception) {
-						if (http != null)
-							Log.error(http.toMessageString());
-						Log.exception(e);
+						Log.exception("HTTPServer.exception", e);
 						http.send(e.message, SERVICE_UNAVAILABLE);
 						onResponseAfter(http);
 						@:privateAccess http.__send();
 					}
-					http.close();
 				} else {
 					client.close();
 				}

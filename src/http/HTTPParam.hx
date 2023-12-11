@@ -84,7 +84,7 @@ class HTTPParam {
 				}
 			}
 		} catch (e:Exception) {
-			Log.exception(e);
+			Log.exception("HTTPParam", e);
 		}
 	}
 

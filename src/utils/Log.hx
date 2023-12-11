@@ -1,5 +1,6 @@
 package utils;
 
+import haxe.macro.Context;
 import haxe.Exception;
 
 class Log {
@@ -19,8 +20,8 @@ class Log {
 		Sys.println('\u001b[33m[WARRING]${data.toArray().join(", ")}');
 	}
 
-	public static function exception(e:Exception):Void {
-		Log.error(e.message);
-		Log.error(e.stack.toString());
+	public static function exception(tag:String, e:Exception):Void {
+		Log.error(tag, e.message);
+		Log.error(tag, e.stack.toString());
 	}
 }
