@@ -54,10 +54,6 @@ class HTTPServer extends SocketServer {
 		Threads.create(() -> {
 			var head:String = null;
 			try {
-				// if (this.ssl != null) {
-				// 	var sslSocket:sys.ssl.Socket = cast client;
-				// sslSocket.handshake();
-				// }
 				head = client.input.readLine();
 				if (this.log) {
 					Log.info("connect head:", head);
