@@ -1,5 +1,7 @@
 package http;
 
+import haxe.io.Input;
+import haxe.io.BytesBuffer;
 import utils.MimeTools;
 import net.SocketClient;
 import haxe.Exception;
@@ -11,6 +13,8 @@ import sys.FileSystem;
 import sys.io.File;
 import utils.Log;
 import sys.net.Socket;
+
+using utils.BytesTools;
 
 /**
  * 网络请求
@@ -34,7 +38,7 @@ class HTTPRequest extends SocketClient {
 	/**
 	 * HTTP版本
 	 */
-	public var httpVersion:String;
+	public var httpVersion:HTTPVersion;
 
 	/**
 	 * 参数数据
@@ -110,7 +114,7 @@ class HTTPRequest extends SocketClient {
 			var content:String = null;
 			content = input.readLine();
 			// if (server.log)
-			// Log.info(content);
+			Log.info(content);
 			if (content == "" || content == null) {
 				break;
 			}
@@ -125,11 +129,85 @@ class HTTPRequest extends SocketClient {
 			}
 			var key = datas[0];
 			key = key.substr(0, key.length - 1);
-			this.param.pushHeader(key, datas[1]);
+			var param = datas.slice(1).join(" ");
+			if (param.charAt(0) == " ")
+				param = param.substr(1);
+			this.param.pushHeader(key, param);
 		}
 		if (contentLength > 0) {
 			postData = Bytes.alloc(contentLength);
 			input.readFullBytes(postData, 0, contentLength);
+		}
+		// TODO HTTP2协议支持
+		var connection = this.param.header("Connection");
+		trace("Connection=", connection);
+		if (connection != null) {
+			connection = connection.toLowerCase();
+			if (connection.indexOf("upgrade") != -1 && connection.indexOf("http2-settings") != -1) {
+				Log.warring("Need upgrade to HTTP2");
+				this.httpVersion = HTTP2;
+				var bytesOutput:BytesOutput = new BytesOutput();
+				var code = HTTPRequestCode.SWITCHING_PROTOCOLS;
+				bytesOutput.writeString("HTTP/1.1 " + code + " " + HTTPRequestCode.toMessageString(code));
+				bytesOutput.writeString("\r\n");
+				bytesOutput.writeString("Connection: Upgrade");
+				bytesOutput.writeString("\r\n");
+				bytesOutput.writeString("Upgrade: h2c");
+				bytesOutput.writeString("\r\n");
+				bytesOutput.writeString("\r\n");
+				var bytes = bytesOutput.getBytes();
+				socket.output.writeFullBytes(bytes, 0, bytes.length);
+				// header
+				var header = "";
+				var settings = "";
+				var step = 0;
+				while (true) {
+					switch step {
+						case 0:
+							// read header
+							var char = input.readLine();
+							if (char != "") {
+								header += char + "\r\n";
+							} else {
+								step++;
+							}
+						case 1:
+							// read setting
+							var char = input.readLine();
+							if (char != "") {
+								settings += char + "\r\n";
+							} else {
+								step++;
+							}
+						case 2:
+							break;
+					}
+				}
+				Log.warring("header=", header);
+				Log.warring("settings=", settings);
+				var frameHeader = Bytes.alloc(9);
+				input.readFullBytes(frameHeader, 0, 9);
+				var length = frameHeader.getInt24(0);
+				trace("字节长度：", length);
+				var type = frameHeader.getInt8(3);
+				trace("类型：", type);
+				var flags = frameHeader.getInt8(4);
+				trace("flags：", flags);
+				var bytesArray = frameHeader.getData();
+				var R = bytesArray[40];
+				trace("R:", R);
+
+				var contentBytes = Bytes.alloc(length);
+				input.readFullBytes(contentBytes, 0, length);
+				// trace("contentBytes=", contentBytes.toString(), contentBytes.length);
+				trace("contentBytes222=", contentBytes.length);
+				// var identifier = bytesArray.splice(42, 31);
+				// trace("type=", type);
+				// var flags =
+				// trace("falgs=", flags);
+				// var R = input.read(0);
+				// trace("R=", R.length);
+			}
 		}
 	}
 
@@ -157,7 +235,7 @@ class HTTPRequest extends SocketClient {
 			return;
 		var bytes = response.getResponseData();
 		if (server.log) {
-			Log.info(this.path, "Send Length:" + bytes.length);
+			Log.info(this.path, "Code:" + response.code, "Send Length:" + bytes.length, "\n" + bytes.toString());
 		}
 		this.client.output.writeFullBytes(bytes, 0, bytes.length);
 	}

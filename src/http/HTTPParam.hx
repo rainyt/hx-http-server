@@ -136,6 +136,10 @@ class HTTPParam {
 		return __paths[i];
 	}
 
+	public function remove(i:Int):Void {
+		__paths.remove(__paths[i]);
+	}
+
 	/**
 	 * 追加参数数据
 	 * @param data 

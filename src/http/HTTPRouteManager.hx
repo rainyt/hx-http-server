@@ -1,5 +1,6 @@
 package http;
 
+import utils.Log;
 import http.route.HTTPReflectRoute;
 import http.route.HTTPReflectCustomObject;
 import http.route.HTTPRoute;
@@ -108,9 +109,11 @@ class HTTPRouteManager implements IRuning {
 		if (routes.exists(route)) {
 			var list = routes.get(route);
 			for (route in list) {
-				if (route.methods == null || route.methods.contains(client.method))
+				if (route.methods == null || route.methods.contains(client.method)) {
+					Log.warring("route", route.routeId);
 					if (!route.onConnectClient(client))
 						return false;
+				}
 			}
 			return true;
 		}

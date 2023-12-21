@@ -39,7 +39,7 @@ class SocketServer implements IRuning {
 	/**
 	 * 最大链接数
 	 */
-	public var maxThreadCounts = 256;
+	public var maxThreadCounts = 999999;
 
 	private var __server:Socket;
 

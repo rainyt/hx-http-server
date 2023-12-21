@@ -46,6 +46,10 @@ class HTTPServer extends SocketServer {
 	 */
 	dynamic public function onResponseAfter(http:HTTPRequest):Void {}
 
+	dynamic public function onHeaderRoute(header:String):String {
+		return header;
+	}
+
 	/**
 	 * 创建线程管理
 	 * @param client 
@@ -53,10 +57,8 @@ class HTTPServer extends SocketServer {
 	override public function onConnectClient(client:Socket):Void {
 		Threads.create(() -> {
 			var client:Socket = Thread.readMessage(true);
-			var uid = Std.random(99999);
-			trace("Threads start", uid);
 			try {
-				var head = client.input.readLine();
+				var head = onHeaderRoute(client.input.readLine());
 				if (head.indexOf("GET") == 0 || head.indexOf("POST") == 0 || head.indexOf("OPTIONS") == 0) {
 					var http = new HTTPRequest(client, this, head);
 					route.callRoute(http.path, http);
@@ -68,9 +70,8 @@ class HTTPServer extends SocketServer {
 				} else {
 					client.close();
 				}
-				trace("Threads over", uid);
 			} catch (e:Exception) {
-				Log.exception("HTTPServer.exception" + uid, e);
+				Log.exception("HTTPServer.exception", e);
 			}
 		}).sendMessage(client);
 	}
