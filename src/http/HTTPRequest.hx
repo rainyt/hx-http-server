@@ -140,7 +140,6 @@ class HTTPRequest extends SocketClient {
 		}
 		// TODO HTTP2协议支持
 		var connection = this.param.header("Connection");
-		trace("Connection=", connection);
 		if (connection != null) {
 			connection = connection.toLowerCase();
 			if (connection.indexOf("upgrade") != -1 && connection.indexOf("http2-settings") != -1) {
@@ -185,22 +184,11 @@ class HTTPRequest extends SocketClient {
 				}
 				Log.warring("header=", header);
 				Log.warring("settings=", settings);
-				var frameHeader = Bytes.alloc(9);
-				input.readFullBytes(frameHeader, 0, 9);
-				var length = frameHeader.getInt24(0);
-				trace("字节长度：", length);
-				var type = frameHeader.getInt8(3);
-				trace("类型：", type);
-				var flags = frameHeader.getInt8(4);
-				trace("flags：", flags);
-				var bytesArray = frameHeader.getData();
-				var R = bytesArray[40];
-				trace("R:", R);
 
-				var contentBytes = Bytes.alloc(length);
-				input.readFullBytes(contentBytes, 0, length);
-				// trace("contentBytes=", contentBytes.toString(), contentBytes.length);
-				trace("contentBytes222=", contentBytes.length);
+				while (true) {
+					__readHttp2(input);
+				}
+				// __readHttp2(input);
 				// var identifier = bytesArray.splice(42, 31);
 				// trace("type=", type);
 				// var flags =
@@ -209,6 +197,25 @@ class HTTPRequest extends SocketClient {
 				// trace("R=", R.length);
 			}
 		}
+	}
+
+	private function __readHttp2(input:Input):Void {
+		var frameHeader = Bytes.alloc(9);
+		input.readFullBytes(frameHeader, 0, 9);
+		var length = frameHeader.getInt24(0);
+		trace("字节长度：", length);
+		var type = frameHeader.getInt8(3);
+		trace("类型：", type);
+		var flags = frameHeader.getInt8(4);
+		trace("flags：", flags);
+		var bytesArray = frameHeader.getData();
+		var R = bytesArray[40];
+		trace("R:", R);
+
+		var contentBytes = Bytes.alloc(length);
+		input.readFullBytes(contentBytes, 0, length);
+		// trace("contentBytes=", contentBytes.toString(), contentBytes.length);
+		trace("contentBytes222=" + contentBytes.toString() + "----" + contentBytes.length);
 	}
 
 	/**
