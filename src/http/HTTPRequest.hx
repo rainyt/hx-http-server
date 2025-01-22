@@ -215,7 +215,7 @@ class HTTPRequest extends SocketClient {
 		var contentBytes = Bytes.alloc(length);
 		input.readFullBytes(contentBytes, 0, length);
 		// trace("contentBytes=", contentBytes.toString(), contentBytes.length);
-		trace("contentBytes222=" + contentBytes.toString() + "----" + contentBytes.length);
+		// trace("contentBytes222=" + contentBytes.toString() + "----" + contentBytes.length);
 	}
 
 	/**
